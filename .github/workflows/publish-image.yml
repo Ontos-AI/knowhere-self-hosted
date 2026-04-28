@@ -32,6 +32,11 @@ permissions:
   contents: write
   packages: write
 
+env:
+  GHCR_IMAGE: ghcr.io/ontos-ai/knowhere
+  ALIYUN_ACR_REGISTRY: knowhere-registry.cn-shenzhen.cr.aliyuncs.com
+  ALIYUN_ACR_IMAGE: knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere
+
 concurrency:
   group: publish-self-hosted-image-${{ github.ref }}
   cancel-in-progress: false
@@ -100,11 +105,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log in to Aliyun ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ALIYUN_ACR_REGISTRY }}
+          username: ${{ secrets.ALIYUN_ACR_USERNAME }}
+          password: ${{ secrets.ALIYUN_ACR_PASSWORD }}
+
       - name: Generate image metadata
         id: metadata
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/ontos-ai/knowhere
+          images: |
+            ${{ env.GHCR_IMAGE }}
+            ${{ env.ALIYUN_ACR_IMAGE }}
           tags: |
             type=raw,value=${{ inputs.image_tag }}
             type=raw,value=latest,enable=${{ inputs.publish_latest }}
@@ -154,10 +168,15 @@ jobs:
           cp compose.yaml release-assets/compose.yaml
           cp .env.defaults release-assets/env.defaults
 
-          image_ref="ghcr.io/ontos-ai/knowhere:${IMAGE_TAG}"
-          digest_ref="ghcr.io/ontos-ai/knowhere@${IMAGE_DIGEST}"
+          ghcr_image_ref="${GHCR_IMAGE}:${IMAGE_TAG}"
+          ghcr_digest_ref="${GHCR_IMAGE}@${IMAGE_DIGEST}"
+          aliyun_image_ref="${ALIYUN_ACR_IMAGE}:${IMAGE_TAG}"
+          aliyun_digest_ref="${ALIYUN_ACR_IMAGE}@${IMAGE_DIGEST}"
 
-          printf '%s\n' "${digest_ref}" > release-assets/image-digest.txt
+          {
+            echo "GHCR: ${ghcr_digest_ref}"
+            echo "Aliyun ACR: ${aliyun_digest_ref}"
+          } > release-assets/image-digest.txt
 
           {
             echo "self_hosted_repo=${GITHUB_REPOSITORY}"
@@ -169,9 +188,13 @@ jobs:
           } > release-assets/source-revisions.txt
 
           {
-            echo "Image: \`${image_ref}\`"
+            echo "Images:"
+            echo "- GHCR: \`${ghcr_image_ref}\`"
+            echo "- Aliyun ACR: \`${aliyun_image_ref}\`"
             echo
-            echo "Digest: \`${digest_ref}\`"
+            echo "Digests:"
+            echo "- GHCR: \`${ghcr_digest_ref}\`"
+            echo "- Aliyun ACR: \`${aliyun_digest_ref}\`"
             echo
             echo "Source revisions:"
             echo "- knowhere: \`${GITHUB_SHA}\`"
@@ -181,7 +204,7 @@ jobs:
             echo "Assets:"
             echo "- \`compose.yaml\`: Docker Compose starter file"
             echo "- \`env.defaults\`: default and reference environment variables"
-            echo "- \`image-digest.txt\`: immutable GHCR image digest"
+            echo "- \`image-digest.txt\`: immutable image digests"
             echo "- \`source-revisions.txt\`: source refs included in this image"
           } > release-notes.md
 

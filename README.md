@@ -117,6 +117,28 @@ docker compose pull
 docker compose up -d
 ```
 
+## Image Registries
+
+You can pull the Knowhere image from either GHCR or Aliyun Container Registry:
+
+```text
+ghcr.io/ontos-ai/knowhere
+knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere
+```
+
+To use the Aliyun image, set this value in `.env`:
+
+```bash
+KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```
+
+Then pull and restart:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
 ## Troubleshooting
 
 Check whether the services are running:
