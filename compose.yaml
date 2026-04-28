@@ -1,0 +1,89 @@
+services:
+  app:
+    image: ${KNOWHERE_IMAGE:-ghcr.io/ontos-ai/knowhere:latest}
+    env_file:
+      - path: .env.defaults
+        required: true
+      - path: .env
+        required: false
+    ports:
+      - "${DASHBOARD_HOST_PORT:-3000}:3000"
+      - "${API_HOST_PORT:-5005}:5005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    volumes:
+      - knowhere_user_data:/data/users
+      - knowhere_model_cache:/data/models
+      - knowhere_secrets:/data/secrets
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: Knowhere
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root123}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d Knowhere"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru --stop-writes-on-bgsave-error no
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:3.8
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SERVICES: s3,sns,sqs,iam,sts
+      DEBUG: "1"
+      PERSISTENCE: "1"
+      DATA_DIR: /var/lib/localstack/data
+      S3_SKIP_SIGNATURE_VALIDATION: "1"
+      S3_SKIP_SSL_VERIFICATION: "1"
+      LOCALSTACK_HOST: localstack:4566
+      HOSTNAME_EXTERNAL: localstack
+      EDGE_PORT: "4566"
+      SNS_ENDPOINT_STRATEGY: domain
+    ports:
+      - "${LOCALSTACK_HOST_PORT:-4566}:4566"
+    volumes:
+      - localstack_data:/var/lib/localstack
+    networks:
+      default:
+        aliases:
+          - localhost.localstack.cloud
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  knowhere_user_data:
+  knowhere_model_cache:
+  knowhere_secrets:
+  postgres_data:
+  redis_data:
+  localstack_data:

@@ -1,0 +1,14 @@
+.git
+.env
+logs
+**/.git
+**/.venv
+**/.mypy_cache
+**/.pytest_cache
+**/.ruff_cache
+**/.next/cache
+**/node_modules
+**/coverage
+**/dist
+**/__pycache__
+**/*.pyc
