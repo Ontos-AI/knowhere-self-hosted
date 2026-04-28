@@ -117,24 +117,22 @@ docker compose pull
 docker compose up -d
 ```
 
-## China Registry
+## Image Registries
 
-For users in China, use the Aliyun Container Registry mirror image:
+Release images are published to both GHCR and Aliyun Container Registry:
+
+```text
+ghcr.io/ontos-ai/knowhere
+knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere
+```
+
+To use the Aliyun image, set `KNOWHERE_IMAGE` before pulling and starting:
 
 ```bash
 KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
-```
-
-Then pull and start normally:
-
-```bash
 docker compose pull
 docker compose up -d
 ```
-
-Release images are published to both `ghcr.io/ontos-ai/knowhere` and `knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere`. Maintainers must configure the GitHub Actions secrets `ALIYUN_ACR_USERNAME` and `ALIYUN_ACR_PASSWORD` before running the publish workflow.
-
-Unauthenticated pulls require the Aliyun ACR Enterprise Edition instance setting `Pull from Anonymous Users` to be enabled. If it is not enabled, run `docker login knowhere-registry.cn-shenzhen.cr.aliyuncs.com` before pulling the image.
 
 ## Troubleshooting
 
