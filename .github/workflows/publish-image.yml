@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: Image tag to publish, for example oss-v0.1.0
+        description: Image tag to publish, for example v0.1.0-beta.1 or v0.1.0
         required: true
         type: string
       api_ref:
