@@ -134,6 +134,8 @@ docker compose up -d
 
 Release images are published to both `ghcr.io/ontos-ai/knowhere` and `knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere`. Maintainers must configure the GitHub Actions secrets `ALIYUN_ACR_USERNAME` and `ALIYUN_ACR_PASSWORD` before running the publish workflow.
 
+Unauthenticated pulls require the Aliyun ACR Enterprise Edition instance setting `Pull from Anonymous Users` to be enabled. If it is not enabled, run `docker login knowhere-registry.cn-shenzhen.cr.aliyuncs.com` before pulling the image.
+
 ## Troubleshooting
 
 Check whether the services are running:
