@@ -117,6 +117,23 @@ docker compose pull
 docker compose up -d
 ```
 
+## China Registry
+
+For users in China, use the Aliyun Container Registry mirror image:
+
+```bash
+KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```
+
+Then pull and start normally:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Release images are published to both `ghcr.io/ontos-ai/knowhere` and `knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere`. Maintainers must configure the GitHub Actions secrets `ALIYUN_ACR_USERNAME` and `ALIYUN_ACR_PASSWORD` before running the publish workflow.
+
 ## Troubleshooting
 
 Check whether the services are running:
