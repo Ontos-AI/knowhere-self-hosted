@@ -22,9 +22,14 @@ on:
         required: true
         default: false
         type: boolean
+      create_github_release:
+        description: Create a matching GitHub tag and release
+        required: true
+        default: true
+        type: boolean
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 concurrency:
@@ -110,6 +115,7 @@ jobs:
             ai.ontos.knowhere.dashboard-revision=${{ steps.revisions.outputs.dashboard_commit }}
 
       - name: Build and publish combined image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -122,3 +128,73 @@ jobs:
             GIT_COMMIT=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Create GitHub release
+        if: ${{ inputs.create_github_release }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+          PUBLISH_LATEST: ${{ inputs.publish_latest }}
+          API_REF: ${{ inputs.api_ref }}
+          API_COMMIT: ${{ steps.revisions.outputs.api_commit }}
+          DASHBOARD_REF: ${{ inputs.dashboard_ref }}
+          DASHBOARD_COMMIT: ${{ steps.revisions.outputs.dashboard_commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p release-assets
+          cp compose.yaml release-assets/compose.yaml
+          cp .env.defaults release-assets/env.defaults
+
+          image_ref="ghcr.io/ontos-ai/knowhere:${IMAGE_TAG}"
+          digest_ref="ghcr.io/ontos-ai/knowhere@${IMAGE_DIGEST}"
+
+          printf '%s\n' "${digest_ref}" > release-assets/image-digest.txt
+
+          {
+            echo "self_hosted_repo=${GITHUB_REPOSITORY}"
+            echo "self_hosted_commit=${GITHUB_SHA}"
+            echo "api_ref=${API_REF}"
+            echo "api_commit=${API_COMMIT}"
+            echo "dashboard_ref=${DASHBOARD_REF}"
+            echo "dashboard_commit=${DASHBOARD_COMMIT}"
+          } > release-assets/source-revisions.txt
+
+          {
+            echo "Image: \`${image_ref}\`"
+            echo
+            echo "Digest: \`${digest_ref}\`"
+            echo
+            echo "Source revisions:"
+            echo "- knowhere: \`${GITHUB_SHA}\`"
+            echo "- knowhere-api: \`${API_REF}\` / \`${API_COMMIT}\`"
+            echo "- knowhere-api-dashboard: \`${DASHBOARD_REF}\` / \`${DASHBOARD_COMMIT}\`"
+            echo
+            echo "Assets:"
+            echo "- \`compose.yaml\`: Docker Compose starter file"
+            echo "- \`env.defaults\`: default and reference environment variables"
+            echo "- \`image-digest.txt\`: immutable GHCR image digest"
+            echo "- \`source-revisions.txt\`: source refs included in this image"
+          } > release-notes.md
+
+          release_args=(
+            --repo "${GITHUB_REPOSITORY}"
+            --target "${GITHUB_SHA}"
+            --title "${IMAGE_TAG}"
+            --notes-file release-notes.md
+          )
+
+          if [[ "${IMAGE_TAG}" =~ -(alpha|beta|rc)(\\.|$) ]]; then
+            release_args+=(--prerelease --latest=false)
+          elif [ "${PUBLISH_LATEST}" != "true" ]; then
+            release_args+=(--latest=false)
+          fi
+
+          gh release create "${IMAGE_TAG}" \
+            release-assets/compose.yaml \
+            release-assets/env.defaults \
+            release-assets/image-digest.txt \
+            release-assets/source-revisions.txt \
+            "${release_args[@]}"
