@@ -7,8 +7,8 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 ## Requirements
 
 - Docker and Docker Compose.
-- A MinerU API key for PDF basic parsing.
-- One LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
+- MinerU API key for PDF basic parsing.
+- LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
 
 ## 1. Prepare API Keys
 
