@@ -53,6 +53,12 @@ DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 
 如果 `DASHBOARD_PUBLIC_URL` 和浏览器地址不一致，登录或注册可能失败。
 
+如果从 GHCR 拉取默认镜像较慢或不可用，可以使用阿里云 Docker 镜像：
+
+```bash
+KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```
+
 ## 3. 启动服务
 
 ```bash
@@ -109,4 +115,4 @@ docker compose up -d
 
 ## 更多配置
 
-除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.md](docs/configuration.md)。
+除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.zh-CN.md](docs/configuration.zh-CN.md)。

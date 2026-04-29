@@ -55,6 +55,12 @@ DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 
 If `DASHBOARD_PUBLIC_URL` does not match the browser URL, login or signup may fail.
 
+If pulling the default image from GHCR is slow or unavailable, use the Aliyun Docker registry:
+
+```bash
+KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```
+
 ## 3. Start Knowhere
 
 ```bash
