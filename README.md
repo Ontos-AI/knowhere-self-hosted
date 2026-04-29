@@ -1,163 +1,135 @@
 # Knowhere Self-Hosted
 
-Knowhere Self-Hosted lets you run Knowhere on your own computer or server. It includes the web dashboard, API, worker, database, cache, and local file storage in one Docker Compose setup.
+Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhere 服务，包括 Dashboard、API、Worker、PostgreSQL、Redis 和本地 S3 兼容存储。
 
-## What You Need
+## 准备工作
 
-- A computer or server with Docker and Docker Compose installed.
-- At least one AI provider API key, for example DeepSeek, OpenAI-compatible, Zhipu GLM, Alibaba DashScope, or Volcengine ARK.
-- A public URL or server address if other people need to open Knowhere from another machine.
+- 已安装 Docker 和 Docker Compose。
+- 一个 MinerU API Key，用于 PDF 文档解析。
+- 一个大模型 API Key：DeepSeek 或阿里云百炼 DashScope 二选一。
 
-## Quick Start
+## 1. 获取 API Key
 
-1. Download this repository.
-2. Create your config file:
+### MinerU
+
+进入 MinerU 官网并登录：
+
+```text
+https://mineru.net/apiManage/token
+```
+
+创建或复制 API Token，后面填入 `MINERU_API_KEYS`。
+
+### DeepSeek
+
+进入 DeepSeek 开放平台并登录：
+
+```text
+https://platform.deepseek.com/api_keys
+```
+
+创建或复制 API Key，后面填入 `DS_KEY`。
+
+### 阿里云百炼 DashScope
+
+进入阿里云百炼控制台并登录：
+
+```text
+https://bailian.console.aliyun.com/?tab=model#/api-key
+```
+
+创建或复制 API Key，后面填入 `ALI_API_KEYS`。
+
+## 2. 配置 `.env`
+
+复制默认配置：
 
 ```bash
 cp .env.defaults .env
 ```
 
-3. Edit `.env` and set the values you need:
+如果已经有 `.env`，直接编辑现有文件即可。至少填写 MinerU Key 和一个大模型 Key。
+
+使用 DeepSeek：
 
 ```bash
-DASHBOARD_PUBLIC_URL=http://localhost:3000
-DS_KEY=your-ai-provider-key
+MINERU_API_KEYS=your-mineru-api-key
+DS_KEY=your-deepseek-api-key
 ```
 
-Knowhere uses `.env.defaults` for built-in defaults and reads `.env` as your override file. `.env.defaults` is also the full settings reference. It includes a default database password for the built-in database, and it generates app secrets on first startup. You do not need to create these values manually. You can change any value in `.env` later and restart with `docker compose up -d`.
-
-4. Start Knowhere:
+或使用阿里云百炼 DashScope：
 
 ```bash
-docker compose up -d
+MINERU_API_KEYS=your-mineru-api-key
+ALI_API_KEYS=your-dashscope-api-key
+NORMOL_MODEL=qwen-plus
+HIERARCHY_LLM_MODEL=qwen-plus
+IMAGE_MODEL=qwen-vl-plus
+IMAGE_MODEL_MAX=qwen-vl-plus
 ```
 
-5. Open the dashboard:
-
-```text
-http://localhost:3000/login
-```
-
-To stop Knowhere:
+`MINERU_API_KEYS` 和 `ALI_API_KEYS` 都支持多个 Key，用英文逗号分隔：
 
 ```bash
-docker compose down
+MINERU_API_KEYS=mineru-key-1,mineru-key-2
+ALI_API_KEYS=dashscope-key-1,dashscope-key-2
 ```
 
-Your database and uploaded files stay in Docker volumes unless you delete the volumes.
-
-## Public URL
-
-`DASHBOARD_PUBLIC_URL` must match the address people use in their browser.
-
-Use this for local testing:
-
-```bash
-DASHBOARD_PUBLIC_URL=http://localhost:3000
-```
-
-Use your real domain or server IP for a shared deployment:
+本地访问默认不需要修改其他配置。外部访问时，把 `DASHBOARD_PUBLIC_URL` 改成用户浏览器实际打开的地址：
 
 ```bash
 DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 ```
 
-If this value does not match the browser address, login or signup may fail.
+如果 `DASHBOARD_PUBLIC_URL` 和浏览器地址不一致，登录或注册可能失败。
 
-## AI Model Config
-
-Choose your model provider by setting the related key and model names in `.env`.
-
-Common examples:
+## 3. 启动服务
 
 ```bash
-DS_KEY=your-deepseek-key
-NORMOL_MODEL=deepseek-chat
-```
-
-```bash
-GPT_API_KEY=your-openai-compatible-key
-NORMOL_MODEL=gpt-4o-mini
-```
-
-Useful model variables:
-
-| Variable | What It Controls |
-| --- | --- |
-| `NORMOL_MODEL` | Main text and table understanding model. |
-| `HIERARCHY_LLM_MODEL` | Document outline and heading model. |
-| `IMAGE_MODEL` | Image understanding model. |
-| `IMAGE_MODEL_MAX` | Higher-capacity image understanding model. |
-| `EMBEDDING_MODEL` | Embedding model for search and retrieval. |
-
-## Ports
-
-Default ports:
-
-| Service | URL |
-| --- | --- |
-| Dashboard | `http://localhost:3000` |
-| API health check | `http://localhost:5005/health` |
-
-To use different host ports:
-
-```bash
-DASHBOARD_HOST_PORT=8080
-API_HOST_PORT=5005
-```
-
-Then set `DASHBOARD_PUBLIC_URL` to the address users will open, for example `http://localhost:8080`.
-
-## Updating
-
-Pull the latest image and restart:
-
-```bash
-docker compose pull
 docker compose up -d
 ```
 
-## Image Registries
-
-You can pull the Knowhere image from either GHCR or Aliyun Container Registry:
+打开 Dashboard：
 
 ```text
-ghcr.io/ontos-ai/knowhere
-knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere
+http://localhost:3000/login
 ```
 
-To use the Aliyun image, set this value in `.env`:
+API 健康检查：
 
-```bash
-KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```text
+http://localhost:5005/health
 ```
 
-Then pull and restart:
+## 常用命令
 
-```bash
-docker compose pull
-docker compose up -d
-```
-
-## Troubleshooting
-
-Check whether the services are running:
+查看服务状态：
 
 ```bash
 docker compose ps
 ```
 
-View app logs:
+查看应用日志：
 
 ```bash
 docker compose logs -f app
 ```
 
-Restart everything:
+停止服务：
 
 ```bash
 docker compose down
+```
+
+更新镜像并重启：
+
+```bash
+docker compose pull
 docker compose up -d
 ```
 
-If login or signup says the origin is invalid, check that `DASHBOARD_PUBLIC_URL` exactly matches the URL in your browser.
+数据库和上传文件会保存在 Docker volumes 中，执行 `docker compose down` 不会删除这些数据。
+
+## 更多配置
+
+除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、认证、邮件、计费、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.md](docs/configuration.md)。
