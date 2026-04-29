@@ -2,7 +2,7 @@
 
 English | [中文](README.zh-CN.md)
 
-Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want to use or study the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
+Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want to use the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
 
 ## Requirements
 
