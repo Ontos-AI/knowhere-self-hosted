@@ -1,63 +1,65 @@
 # Knowhere Self-Hosted
 
-Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhere 服务，包括 Dashboard、API、Worker、PostgreSQL、Redis 和本地 S3 兼容存储。
+English | [中文](README.zh-CN.md)
 
-## 准备工作
+Knowhere Self-Hosted runs the full Knowhere stack with Docker Compose on one machine: Dashboard, API, Worker, PostgreSQL, Redis, and local S3-compatible storage.
 
-- 已安装 Docker 和 Docker Compose。
-- 一个 MinerU API Key，用于 PDF 文档解析。
-- 一个大模型 API Key：DeepSeek 或阿里云百炼 DashScope 二选一。
+## Requirements
 
-## 1. 获取 API Key
+- Docker and Docker Compose.
+- A MinerU API key for PDF parsing.
+- One LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
+
+## 1. Get API Keys
 
 ### MinerU
 
-进入 MinerU 官网并登录：
+Open MinerU and sign in:
 
 ```text
 https://mineru.net/apiManage/token
 ```
 
-创建或复制 API Token，后面填入 `MINERU_API_KEYS`。
+Create or copy an API token, then set it as `MINERU_API_KEYS`.
 
 ### DeepSeek
 
-进入 DeepSeek 开放平台并登录：
+Open the DeepSeek platform and sign in:
 
 ```text
 https://platform.deepseek.com/api_keys
 ```
 
-创建或复制 API Key，后面填入 `DS_KEY`。
+Create or copy an API key, then set it as `DS_KEY`.
 
-### 阿里云百炼 DashScope
+### Alibaba Cloud Model Studio DashScope
 
-进入阿里云百炼控制台并登录：
+Open the Alibaba Cloud Model Studio console and sign in:
 
 ```text
 https://bailian.console.aliyun.com/?tab=model#/api-key
 ```
 
-创建或复制 API Key，后面填入 `ALI_API_KEYS`。
+Create or copy an API key, then set it as `ALI_API_KEYS`.
 
-## 2. 配置 `.env`
+## 2. Configure `.env`
 
-复制默认配置：
+Copy the default configuration:
 
 ```bash
 cp .env.defaults .env
 ```
 
-如果已经有 `.env`，直接编辑现有文件即可。至少填写 MinerU Key 和一个大模型 Key。
+If `.env` already exists, edit the existing file. At minimum, set the MinerU key and one LLM provider key.
 
-使用 DeepSeek：
+Use DeepSeek:
 
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 DS_KEY=your-deepseek-api-key
 ```
 
-或使用阿里云百炼 DashScope：
+Or use Alibaba Cloud Model Studio DashScope:
 
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
@@ -68,68 +70,68 @@ IMAGE_MODEL=qwen-vl-plus
 IMAGE_MODEL_MAX=qwen-vl-plus
 ```
 
-`MINERU_API_KEYS` 和 `ALI_API_KEYS` 都支持多个 Key，用英文逗号分隔：
+`MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys separated by commas:
 
 ```bash
 MINERU_API_KEYS=mineru-key-1,mineru-key-2
 ALI_API_KEYS=dashscope-key-1,dashscope-key-2
 ```
 
-本地访问默认不需要修改其他配置。外部访问时，把 `DASHBOARD_PUBLIC_URL` 改成用户浏览器实际打开的地址：
+For local access, no other settings are required. For external access, set `DASHBOARD_PUBLIC_URL` to the exact URL users open in their browser:
 
 ```bash
 DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 ```
 
-如果 `DASHBOARD_PUBLIC_URL` 和浏览器地址不一致，登录或注册可能失败。
+If `DASHBOARD_PUBLIC_URL` does not match the browser URL, login or signup may fail.
 
-## 3. 启动服务
+## 3. Start Knowhere
 
 ```bash
 docker compose up -d
 ```
 
-打开 Dashboard：
+Open the Dashboard:
 
 ```text
 http://localhost:3000/login
 ```
 
-API 健康检查：
+API health check:
 
 ```text
 http://localhost:5005/health
 ```
 
-## 常用命令
+## Common Commands
 
-查看服务状态：
+Check service status:
 
 ```bash
 docker compose ps
 ```
 
-查看应用日志：
+View application logs:
 
 ```bash
 docker compose logs -f app
 ```
 
-停止服务：
+Stop the stack:
 
 ```bash
 docker compose down
 ```
 
-更新镜像并重启：
+Update images and restart:
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-数据库和上传文件会保存在 Docker volumes 中，执行 `docker compose down` 不会删除这些数据。
+Database data and uploaded files remain in Docker volumes after `docker compose down`.
 
-## 更多配置
+## More Configuration
 
-除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、认证、邮件、计费、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.md](docs/configuration.md)。
+Most deployments do not need additional settings. Optional ports, public URLs, model choices, storage, auth, email, billing, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).
