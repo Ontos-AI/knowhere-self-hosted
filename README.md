@@ -62,8 +62,6 @@ DASHBOARD_HOST_BIND=0.0.0.0
 API_HOST_BIND=0.0.0.0
 ```
 
-Keep `POSTGRES_HOST_BIND`, `REDIS_HOST_BIND`, and `LOCALSTACK_HOST_BIND` on `127.0.0.1` unless those services must be reachable from outside the host.
-
 If pulling the default image from GHCR is slow or unavailable, use the Aliyun Docker registry:
 
 ```bash
@@ -126,4 +124,4 @@ Database data and uploaded files remain in Docker volumes after `docker compose 
 
 ## More Configuration
 
-Most deployments do not need additional settings. Optional ports, public URLs, model choices, storage, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).
+There are more configurations like model choices, storage, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).
