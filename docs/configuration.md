@@ -30,6 +30,8 @@ KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:l
 | `DS_KEY` | DeepSeek API Key。使用 DeepSeek 作为文本模型时填写。 | `sk-...` |
 | `ALI_API_KEYS` | 阿里云百炼 DashScope API Key 池。使用 Qwen 模型时填写，格式同 `MINERU_API_KEYS`。 | `sk-...` |
 
+`MINERU_API_KEYS` 和 `ALI_API_KEYS` 支持多个 Key 是为了组成 Key 池，在单个 Key 触发额度或限流时可以轮换使用其他 Key。只有一个 Key 也可以正常运行。
+
 Key 请从各服务商官网获取：
 
 ```text

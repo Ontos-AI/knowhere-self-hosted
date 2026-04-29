@@ -40,7 +40,7 @@ IMAGE_MODEL=qwen-vl-plus
 IMAGE_MODEL_MAX=qwen-vl-plus
 ```
 
-`MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys separated by commas:
+`MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys separated by commas. Multiple keys are optional; they form a key pool so Knowhere can rotate requests across keys when one key reaches provider quota or rate limits.
 
 ```bash
 MINERU_API_KEYS=mineru-key-1,mineru-key-2
