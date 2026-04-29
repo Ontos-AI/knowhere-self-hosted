@@ -83,6 +83,13 @@ API 健康检查：
 http://localhost:5005/health
 ```
 
+## API 使用
+
+请使用官方 SDK 调用 API：
+
+- Node.js SDK：[Ontos-AI/knowhere-node-sdk](https://github.com/Ontos-AI/knowhere-node-sdk)
+- Python SDK：[Ontos-AI/knowhere-python-sdk](https://github.com/Ontos-AI/knowhere-python-sdk)
+
 ## 常用命令
 
 查看服务状态：

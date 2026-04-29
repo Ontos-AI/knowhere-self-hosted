@@ -83,6 +83,13 @@ API health check:
 http://localhost:5005/health
 ```
 
+## API Usage
+
+Use an official SDK to call the API:
+
+- Node.js SDK: [Ontos-AI/knowhere-node-sdk](https://github.com/Ontos-AI/knowhere-node-sdk)
+- Python SDK: [Ontos-AI/knowhere-python-sdk](https://github.com/Ontos-AI/knowhere-python-sdk)
+
 ## Common Commands
 
 Check service status:
