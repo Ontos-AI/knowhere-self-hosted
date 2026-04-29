@@ -14,9 +14,9 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 
 Use the providers' official websites to create or manage the required keys:
 
-- MinerU: `https://mineru.net/`
-- DeepSeek: `https://platform.deepseek.com/`
-- Alibaba Cloud Model Studio DashScope: `https://bailian.console.aliyun.com/`
+- [MinerU](https://mineru.net/)
+- [DeepSeek](https://platform.deepseek.com/)
+- [Alibaba Cloud Model Studio DashScope](https://bailian.console.aliyun.com/)
 
 ## 2. Configure `.env`
 

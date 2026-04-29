@@ -34,11 +34,9 @@ KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:l
 
 Key 请从各服务商官网获取：
 
-```text
-MinerU: https://mineru.net/
-DeepSeek: https://platform.deepseek.com/
-阿里云百炼 DashScope: https://bailian.console.aliyun.com/
-```
+- [MinerU](https://mineru.net/)
+- [DeepSeek](https://platform.deepseek.com/)
+- [阿里云百炼 DashScope](https://bailian.console.aliyun.com/)
 
 ## AI 模型和供应商
 
