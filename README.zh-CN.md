@@ -4,6 +4,10 @@
 
 Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhere 服务，包括 Dashboard、API、Worker、PostgreSQL、Redis 和本地 S3 兼容存储。
 
+## 背景
+
+这个仓库用于 Knowhere 的自托管部署。如果你想使用或了解 SaaS/API 版本，请查看 [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api)。
+
 ## 准备工作
 
 - 已安装 Docker 和 Docker Compose。

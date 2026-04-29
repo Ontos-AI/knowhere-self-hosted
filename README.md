@@ -4,6 +4,10 @@ English | [中文](README.zh-CN.md)
 
 Knowhere Self-Hosted runs the full Knowhere stack with Docker Compose on one machine: Dashboard, API, Worker, PostgreSQL, Redis, and local S3-compatible storage.
 
+## Background
+
+This repository packages Knowhere for self-hosted deployments. If you want to use or study the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
+
 ## Requirements
 
 - Docker and Docker Compose.
