@@ -14,37 +14,13 @@ This repository packages Knowhere for self-hosted deployments. If you want to us
 - A MinerU API key for PDF parsing.
 - One LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
 
-## 1. Get API Keys
+## 1. Prepare API Keys
 
-### MinerU
+Use the providers' official websites to create or manage the required keys:
 
-Open MinerU and sign in:
-
-```text
-https://mineru.net/apiManage/token
-```
-
-Create or copy an API token, then set it as `MINERU_API_KEYS`.
-
-### DeepSeek
-
-Open the DeepSeek platform and sign in:
-
-```text
-https://platform.deepseek.com/api_keys
-```
-
-Create or copy an API key, then set it as `DS_KEY`.
-
-### Alibaba Cloud Model Studio DashScope
-
-Open the Alibaba Cloud Model Studio console and sign in:
-
-```text
-https://bailian.console.aliyun.com/?tab=model#/api-key
-```
-
-Create or copy an API key, then set it as `ALI_API_KEYS`.
+- MinerU: `https://mineru.net/`
+- DeepSeek: `https://platform.deepseek.com/`
+- Alibaba Cloud Model Studio DashScope: `https://bailian.console.aliyun.com/`
 
 ## 2. Configure `.env`
 

@@ -30,12 +30,12 @@ KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:l
 | `DS_KEY` | DeepSeek API Key。使用 DeepSeek 作为文本模型时填写。 | `sk-...` |
 | `ALI_API_KEYS` | 阿里云百炼 DashScope API Key 池。使用 Qwen 模型时填写，格式同 `MINERU_API_KEYS`。 | `sk-...` |
 
-Key 获取地址：
+Key 请从各服务商官网获取：
 
 ```text
-MinerU: https://mineru.net/apiManage/token
-DeepSeek: https://platform.deepseek.com/api_keys
-阿里云百炼 DashScope: https://bailian.console.aliyun.com/?tab=model#/api-key
+MinerU: https://mineru.net/
+DeepSeek: https://platform.deepseek.com/
+阿里云百炼 DashScope: https://bailian.console.aliyun.com/
 ```
 
 ## AI 模型和供应商

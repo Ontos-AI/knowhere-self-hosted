@@ -14,37 +14,13 @@ Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhe
 - 一个 MinerU API Key，用于 PDF 文档解析。
 - 一个大模型 API Key：DeepSeek 或阿里云百炼 DashScope 二选一。
 
-## 1. 获取 API Key
+## 1. 准备 API Key
 
-### MinerU
+请在各服务商官网创建或管理所需的 Key：
 
-进入 MinerU 官网并登录：
-
-```text
-https://mineru.net/apiManage/token
-```
-
-创建或复制 API Token，后面填入 `MINERU_API_KEYS`。
-
-### DeepSeek
-
-进入 DeepSeek 开放平台并登录：
-
-```text
-https://platform.deepseek.com/api_keys
-```
-
-创建或复制 API Key，后面填入 `DS_KEY`。
-
-### 阿里云百炼 DashScope
-
-进入阿里云百炼控制台并登录：
-
-```text
-https://bailian.console.aliyun.com/?tab=model#/api-key
-```
-
-创建或复制 API Key，后面填入 `ALI_API_KEYS`。
+- MinerU：`https://mineru.net/`
+- DeepSeek：`https://platform.deepseek.com/`
+- 阿里云百炼 DashScope：`https://bailian.console.aliyun.com/`
 
 ## 2. 配置 `.env`
 
