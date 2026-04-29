@@ -11,10 +11,15 @@ Docker Compose reads `.env.defaults` first, then reads `.env`. `.env.defaults` i
 | Variable | Usage | Example values |
 | --- | --- | --- |
 | `DASHBOARD_PUBLIC_URL` | Public Dashboard URL opened by users in their browser. Also used for login, signup, and callback validation. | `http://localhost:3000`, `https://knowhere.example.com` |
+| `DASHBOARD_HOST_BIND` | Host interface bound by the Dashboard port. Defaults to localhost. Use `0.0.0.0` only when the Dashboard must be reachable from outside the host. | `127.0.0.1`, `0.0.0.0` |
 | `DASHBOARD_HOST_PORT` | Host port mapped to the Dashboard. | `3000`, `8080` |
+| `API_HOST_BIND` | Host interface bound by the API port. Defaults to localhost. Use `0.0.0.0` only when the API must be reachable from outside the host. | `127.0.0.1`, `0.0.0.0` |
 | `API_HOST_PORT` | Host port mapped to the API. | `5005` |
+| `POSTGRES_HOST_BIND` | Host interface bound by the PostgreSQL port. Keep the default unless an external database client must connect directly. | `127.0.0.1`, `0.0.0.0` |
 | `POSTGRES_HOST_PORT` | Host port mapped to PostgreSQL. | `5432` |
+| `REDIS_HOST_BIND` | Host interface bound by the Redis port. Keep the default unless an external Redis client must connect directly. | `127.0.0.1`, `0.0.0.0` |
 | `REDIS_HOST_PORT` | Host port mapped to Redis. | `6379` |
+| `LOCALSTACK_HOST_BIND` | Host interface bound by the LocalStack port. Keep the default unless external S3-compatible tooling must connect directly. | `127.0.0.1`, `0.0.0.0` |
 | `LOCALSTACK_HOST_PORT` | Host port mapped to the LocalStack S3-compatible service. | `4566` |
 | `KNOWHERE_IMAGE` | Knowhere self-hosted Docker image. | `ghcr.io/ontos-ai/knowhere:latest` |
 

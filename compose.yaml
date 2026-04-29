@@ -7,8 +7,8 @@ services:
       - path: .env
         required: false
     ports:
-      - "${DASHBOARD_HOST_PORT:-3000}:3000"
-      - "${API_HOST_PORT:-5005}:5005"
+      - "${DASHBOARD_HOST_BIND:-127.0.0.1}:${DASHBOARD_HOST_PORT:-3000}:3000"
+      - "${API_HOST_BIND:-127.0.0.1}:${API_HOST_PORT:-5005}:5005"
     depends_on:
       postgres:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root123}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
     ports:
-      - "${POSTGRES_HOST_PORT:-5432}:5432"
+      - "${POSTGRES_HOST_BIND:-127.0.0.1}:${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -42,7 +42,7 @@ services:
     image: redis:7-alpine
     command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru --stop-writes-on-bgsave-error no
     ports:
-      - "${REDIS_HOST_PORT:-6379}:6379"
+      - "${REDIS_HOST_BIND:-127.0.0.1}:${REDIS_HOST_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -67,7 +67,7 @@ services:
       EDGE_PORT: "4566"
       SNS_ENDPOINT_STRATEGY: domain
     ports:
-      - "${LOCALSTACK_HOST_PORT:-4566}:4566"
+      - "${LOCALSTACK_HOST_BIND:-127.0.0.1}:${LOCALSTACK_HOST_PORT:-4566}:4566"
     volumes:
       - localstack_data:/var/lib/localstack
     networks:

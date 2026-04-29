@@ -11,10 +11,15 @@ Docker Compose 会先读取 `.env.defaults`，再读取 `.env`。`.env.defaults`
 | 变量 | 用途 | 示例值 |
 | --- | --- | --- |
 | `DASHBOARD_PUBLIC_URL` | 用户浏览器访问 Dashboard 的公开地址，也用于登录、注册和回调校验。 | `http://localhost:3000`、`https://knowhere.example.com` |
+| `DASHBOARD_HOST_BIND` | Dashboard 端口绑定的宿主机网卡地址。默认只绑定本机；只有需要从宿主机外部直连 Dashboard 时才使用 `0.0.0.0`。 | `127.0.0.1`、`0.0.0.0` |
 | `DASHBOARD_HOST_PORT` | Dashboard 映射到宿主机的端口。 | `3000`、`8080` |
+| `API_HOST_BIND` | API 端口绑定的宿主机网卡地址。默认只绑定本机；只有需要从宿主机外部直连 API 时才使用 `0.0.0.0`。 | `127.0.0.1`、`0.0.0.0` |
 | `API_HOST_PORT` | API 映射到宿主机的端口。 | `5005` |
+| `POSTGRES_HOST_BIND` | PostgreSQL 端口绑定的宿主机网卡地址。除非外部数据库客户端必须直连，否则保持默认值。 | `127.0.0.1`、`0.0.0.0` |
 | `POSTGRES_HOST_PORT` | PostgreSQL 映射到宿主机的端口。 | `5432` |
+| `REDIS_HOST_BIND` | Redis 端口绑定的宿主机网卡地址。除非外部 Redis 客户端必须直连，否则保持默认值。 | `127.0.0.1`、`0.0.0.0` |
 | `REDIS_HOST_PORT` | Redis 映射到宿主机的端口。 | `6379` |
+| `LOCALSTACK_HOST_BIND` | LocalStack 端口绑定的宿主机网卡地址。除非外部 S3 兼容工具必须直连，否则保持默认值。 | `127.0.0.1`、`0.0.0.0` |
 | `LOCALSTACK_HOST_PORT` | LocalStack S3 兼容存储映射到宿主机的端口。 | `4566` |
 | `KNOWHERE_IMAGE` | Knowhere 自托管镜像。 | `ghcr.io/ontos-ai/knowhere:latest` |
 

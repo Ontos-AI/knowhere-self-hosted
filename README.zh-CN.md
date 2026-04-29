@@ -45,13 +45,24 @@ MINERU_API_KEYS=mineru-key-1,mineru-key-2
 ALI_API_KEYS=dashscope-key-1,dashscope-key-2
 ```
 
-本地访问默认不需要修改其他配置。外部访问时，把 `DASHBOARD_PUBLIC_URL` 改成用户浏览器实际打开的地址：
+本地访问默认不需要修改其他配置。宿主机端口默认只绑定到 `127.0.0.1`。
+
+如果通过本机反向代理对外访问，保持默认绑定即可，同时把 `DASHBOARD_PUBLIC_URL` 改成用户浏览器实际打开的地址：
 
 ```bash
 DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 ```
 
 如果 `DASHBOARD_PUBLIC_URL` 和浏览器地址不一致，登录或注册可能失败。
+
+如果需要让其他机器直接访问宿主机端口，只开放必要的公开服务：
+
+```bash
+DASHBOARD_HOST_BIND=0.0.0.0
+API_HOST_BIND=0.0.0.0
+```
+
+除非确实需要从宿主机外部访问，否则请保持 `POSTGRES_HOST_BIND`、`REDIS_HOST_BIND` 和 `LOCALSTACK_HOST_BIND` 为 `127.0.0.1`。
 
 如果从 GHCR 拉取默认镜像较慢或不可用，可以使用阿里云 Docker 镜像：
 
