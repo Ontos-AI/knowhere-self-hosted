@@ -18,7 +18,7 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 
 ## 2. Configure `.env`
 
-Create a new `.env` file with only the values you need. Knowhere automatically reads `.env.defaults` for built-in defaults, and values in `.env` override them.
+Create a new `.env` file with only the values you need.
 
 For DeepSeek:
 
