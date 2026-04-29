@@ -14,9 +14,9 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 
 Use the providers' official websites to create or manage the required keys:
 
-- MinerU: `https://mineru.net/`
-- DeepSeek: `https://platform.deepseek.com/`
-- Alibaba Cloud Model Studio DashScope: `https://bailian.console.aliyun.com/`
+- [MinerU](https://mineru.net/)
+- [DeepSeek](https://platform.deepseek.com/)
+- [Alibaba Cloud Model Studio DashScope](https://bailian.console.aliyun.com/)
 
 ## 2. Configure `.env`
 
@@ -47,13 +47,30 @@ MINERU_API_KEYS=mineru-key-1,mineru-key-2
 ALI_API_KEYS=dashscope-key-1,dashscope-key-2
 ```
 
-For local access, no other settings are required. For external access, set `DASHBOARD_PUBLIC_URL` to the exact URL users open in their browser:
+For local access, no other settings are required. Host ports bind to `127.0.0.1` by default.
+
+For external access through a local reverse proxy, keep the default binds and set `DASHBOARD_PUBLIC_URL` to the exact URL users open in their browser:
 
 ```bash
 DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 ```
 
 If `DASHBOARD_PUBLIC_URL` does not match the browser URL, login or signup may fail.
+
+If users need to connect directly to the host ports from another machine, also expose only the required public services:
+
+```bash
+DASHBOARD_HOST_BIND=0.0.0.0
+API_HOST_BIND=0.0.0.0
+```
+
+Keep `POSTGRES_HOST_BIND`, `REDIS_HOST_BIND`, and `LOCALSTACK_HOST_BIND` on `127.0.0.1` unless those services must be reachable from outside the host.
+
+If pulling the default image from GHCR is slow or unavailable, use the Aliyun Docker registry:
+
+```bash
+KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```
 
 ## 3. Start Knowhere
 
