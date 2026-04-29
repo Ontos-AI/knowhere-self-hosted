@@ -2,21 +2,15 @@
 
 [English](README.md) | 中文
 
-Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhere 服务，包括 Dashboard、API、Worker、PostgreSQL、Redis 和本地 S3 兼容存储。
-
-## 背景
-
-这个仓库用于 Knowhere 的自托管部署。如果你想使用或了解 SaaS/API 版本，请查看 [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api)。
+Knowhere Self-Hosted 用于 Knowhere 的自托管部署。如果你想使用或了解 SaaS/API 版本，请查看 [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api)。
 
 ## 准备工作
 
 - 已安装 Docker 和 Docker Compose。
-- 一个 MinerU API Key，用于 PDF 文档解析。
+- 一个 MinerU API Key，用于 PDF 文档基础解析。
 - 一个大模型 API Key：DeepSeek 或阿里云百炼 DashScope 二选一。
 
 ## 1. 准备 API Key
-
-请在各服务商官网创建或管理所需的 Key：
 
 - MinerU：`https://mineru.net/`
 - DeepSeek：`https://platform.deepseek.com/`
@@ -24,13 +18,7 @@ Knowhere Self-Hosted 用 Docker Compose 在一台机器上启动完整的 Knowhe
 
 ## 2. 配置 `.env`
 
-复制默认配置：
-
-```bash
-cp .env.defaults .env
-```
-
-如果已经有 `.env`，直接编辑现有文件即可。至少填写 MinerU Key 和一个大模型 Key。
+新建一个 `.env` 文件，只写需要覆盖的配置。Knowhere 会自动读取 `.env.defaults` 作为内置默认值，`.env` 中的值会覆盖默认值。
 
 使用 DeepSeek：
 
@@ -39,7 +27,7 @@ MINERU_API_KEYS=your-mineru-api-key
 DS_KEY=your-deepseek-api-key
 ```
 
-或使用阿里云百炼 DashScope：
+使用阿里云百炼 DashScope：
 
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
@@ -121,4 +109,4 @@ docker compose up -d
 
 ## 更多配置
 
-除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、认证、邮件、计费、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.md](docs/configuration.md)。
+除上述必填项以外的配置通常不需要修改。端口、公开 URL、模型、存储、Webhook、数据库和 Redis 等可选配置见 [docs/configuration.md](docs/configuration.md)。

@@ -2,16 +2,12 @@
 
 English | [中文](README.zh-CN.md)
 
-Knowhere Self-Hosted runs the full Knowhere stack with Docker Compose on one machine: Dashboard, API, Worker, PostgreSQL, Redis, and local S3-compatible storage.
-
-## Background
-
-This repository packages Knowhere for self-hosted deployments. If you want to use or study the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
+Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want to use or study the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
 
 ## Requirements
 
 - Docker and Docker Compose.
-- A MinerU API key for PDF parsing.
+- A MinerU API key for PDF basic parsing.
 - One LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
 
 ## 1. Prepare API Keys
@@ -24,22 +20,16 @@ Use the providers' official websites to create or manage the required keys:
 
 ## 2. Configure `.env`
 
-Copy the default configuration:
+Create a new `.env` file with only the values you need. Knowhere automatically reads `.env.defaults` for built-in defaults, and values in `.env` override them.
 
-```bash
-cp .env.defaults .env
-```
-
-If `.env` already exists, edit the existing file. At minimum, set the MinerU key and one LLM provider key.
-
-Use DeepSeek:
+For DeepSeek:
 
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 DS_KEY=your-deepseek-api-key
 ```
 
-Or use Alibaba Cloud Model Studio DashScope:
+For Alibaba Cloud Model Studio DashScope:
 
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
@@ -121,4 +111,4 @@ Database data and uploaded files remain in Docker volumes after `docker compose 
 
 ## More Configuration
 
-Most deployments do not need additional settings. Optional ports, public URLs, model choices, storage, auth, email, billing, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).
+Most deployments do not need additional settings. Optional ports, public URLs, model choices, storage, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).

@@ -2,7 +2,7 @@
 
 本文档记录启动服务以外的可选配置。普通本地部署只需要 README 中的 `MINERU_API_KEYS` 和 `DS_KEY` 或 `ALI_API_KEYS`。
 
-Docker Compose 会先读取 `.env.defaults`，再读取 `.env`。请只修改 `.env`，不要把真实密钥提交到 Git。
+Docker Compose 会先读取 `.env.defaults`，再读取 `.env`。`.env.defaults` 是内置默认值参考；实际部署时请新建一个小的 `.env`，只写需要覆盖的值，不要把真实密钥提交到 Git。
 
 ## 基础访问地址和镜像
 
