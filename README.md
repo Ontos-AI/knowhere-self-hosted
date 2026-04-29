@@ -10,6 +10,8 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 - A MinerU API key for the initial parsing of PDF documents.
 - LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
 
+For now, our setup uses MinerU as the default PDF parser. If you customize the parsing pipeline, your own parser can also work as long as it produces Markdown (`.md`) files for Knowhere to process. If you'd like to contribute support for additional PDF parsers, feel free to submit a pull request.
+
 ## 1. Prepare API Keys
 
 - [MinerU](https://mineru.net/)
