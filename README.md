@@ -1,163 +1,114 @@
 # Knowhere Self-Hosted
 
-Knowhere Self-Hosted lets you run Knowhere on your own computer or server. It includes the web dashboard, API, worker, database, cache, and local file storage in one Docker Compose setup.
+English | [中文](README.zh-CN.md)
 
-## What You Need
+Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want to use or study the SaaS/API version, see [Ontos-AI/knowhere-api](https://github.com/Ontos-AI/knowhere-api).
 
-- A computer or server with Docker and Docker Compose installed.
-- At least one AI provider API key, for example DeepSeek, OpenAI-compatible, Zhipu GLM, Alibaba DashScope, or Volcengine ARK.
-- A public URL or server address if other people need to open Knowhere from another machine.
+## Requirements
 
-## Quick Start
+- Docker and Docker Compose.
+- A MinerU API key for PDF basic parsing.
+- One LLM provider API key: DeepSeek or Alibaba Cloud Model Studio DashScope.
 
-1. Download this repository.
-2. Create your config file:
+## 1. Prepare API Keys
 
-```bash
-cp .env.defaults .env
-```
+Use the providers' official websites to create or manage the required keys:
 
-3. Edit `.env` and set the values you need:
+- MinerU: `https://mineru.net/`
+- DeepSeek: `https://platform.deepseek.com/`
+- Alibaba Cloud Model Studio DashScope: `https://bailian.console.aliyun.com/`
 
-```bash
-DASHBOARD_PUBLIC_URL=http://localhost:3000
-DS_KEY=your-ai-provider-key
-```
+## 2. Configure `.env`
 
-Knowhere uses `.env.defaults` for built-in defaults and reads `.env` as your override file. `.env.defaults` is also the full settings reference. It includes a default database password for the built-in database, and it generates app secrets on first startup. You do not need to create these values manually. You can change any value in `.env` later and restart with `docker compose up -d`.
+Create a new `.env` file with only the values you need. Knowhere automatically reads `.env.defaults` for built-in defaults, and values in `.env` override them.
 
-4. Start Knowhere:
+For DeepSeek:
 
 ```bash
-docker compose up -d
+MINERU_API_KEYS=your-mineru-api-key
+DS_KEY=your-deepseek-api-key
 ```
 
-5. Open the dashboard:
-
-```text
-http://localhost:3000/login
-```
-
-To stop Knowhere:
+For Alibaba Cloud Model Studio DashScope:
 
 ```bash
-docker compose down
+MINERU_API_KEYS=your-mineru-api-key
+ALI_API_KEYS=your-dashscope-api-key
+NORMOL_MODEL=qwen-plus
+HIERARCHY_LLM_MODEL=qwen-plus
+IMAGE_MODEL=qwen-vl-plus
+IMAGE_MODEL_MAX=qwen-vl-plus
 ```
 
-Your database and uploaded files stay in Docker volumes unless you delete the volumes.
-
-## Public URL
-
-`DASHBOARD_PUBLIC_URL` must match the address people use in their browser.
-
-Use this for local testing:
+`MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys separated by commas. Multiple keys are optional; they form a key pool so Knowhere can rotate requests across keys when one key reaches provider quota or rate limits.
 
 ```bash
-DASHBOARD_PUBLIC_URL=http://localhost:3000
+MINERU_API_KEYS=mineru-key-1,mineru-key-2
+ALI_API_KEYS=dashscope-key-1,dashscope-key-2
 ```
 
-Use your real domain or server IP for a shared deployment:
+For local access, no other settings are required. For external access, set `DASHBOARD_PUBLIC_URL` to the exact URL users open in their browser:
 
 ```bash
 DASHBOARD_PUBLIC_URL=https://knowhere.example.com
 ```
 
-If this value does not match the browser address, login or signup may fail.
+If `DASHBOARD_PUBLIC_URL` does not match the browser URL, login or signup may fail.
 
-## AI Model Config
-
-Choose your model provider by setting the related key and model names in `.env`.
-
-Common examples:
+## 3. Start Knowhere
 
 ```bash
-DS_KEY=your-deepseek-key
-NORMOL_MODEL=deepseek-chat
-```
-
-```bash
-GPT_API_KEY=your-openai-compatible-key
-NORMOL_MODEL=gpt-4o-mini
-```
-
-Useful model variables:
-
-| Variable | What It Controls |
-| --- | --- |
-| `NORMOL_MODEL` | Main text and table understanding model. |
-| `HIERARCHY_LLM_MODEL` | Document outline and heading model. |
-| `IMAGE_MODEL` | Image understanding model. |
-| `IMAGE_MODEL_MAX` | Higher-capacity image understanding model. |
-| `EMBEDDING_MODEL` | Embedding model for search and retrieval. |
-
-## Ports
-
-Default ports:
-
-| Service | URL |
-| --- | --- |
-| Dashboard | `http://localhost:3000` |
-| API health check | `http://localhost:5005/health` |
-
-To use different host ports:
-
-```bash
-DASHBOARD_HOST_PORT=8080
-API_HOST_PORT=5005
-```
-
-Then set `DASHBOARD_PUBLIC_URL` to the address users will open, for example `http://localhost:8080`.
-
-## Updating
-
-Pull the latest image and restart:
-
-```bash
-docker compose pull
 docker compose up -d
 ```
 
-## Image Registries
-
-You can pull the Knowhere image from either GHCR or Aliyun Container Registry:
+Open the Dashboard:
 
 ```text
-ghcr.io/ontos-ai/knowhere
-knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere
+http://localhost:3000/login
 ```
 
-To use the Aliyun image, set this value in `.env`:
+API health check:
 
-```bash
-KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:latest
+```text
+http://localhost:5005/health
 ```
 
-Then pull and restart:
+## API Usage
 
-```bash
-docker compose pull
-docker compose up -d
-```
+Use an official SDK to call the API:
 
-## Troubleshooting
+- Node.js SDK: [Ontos-AI/knowhere-node-sdk](https://github.com/Ontos-AI/knowhere-node-sdk)
+- Python SDK: [Ontos-AI/knowhere-python-sdk](https://github.com/Ontos-AI/knowhere-python-sdk)
 
-Check whether the services are running:
+## Common Commands
+
+Check service status:
 
 ```bash
 docker compose ps
 ```
 
-View app logs:
+View application logs:
 
 ```bash
 docker compose logs -f app
 ```
 
-Restart everything:
+Stop the stack:
 
 ```bash
 docker compose down
+```
+
+Update images and restart:
+
+```bash
+docker compose pull
 docker compose up -d
 ```
 
-If login or signup says the origin is invalid, check that `DASHBOARD_PUBLIC_URL` exactly matches the URL in your browser.
+Database data and uploaded files remain in Docker volumes after `docker compose down`.
+
+## More Configuration
+
+Most deployments do not need additional settings. Optional ports, public URLs, model choices, storage, webhooks, database, and Redis settings are documented in [docs/configuration.md](docs/configuration.md).
