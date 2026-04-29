@@ -12,8 +12,6 @@ Knowhere Self-Hosted packages Knowhere for self-hosted deployments. If you want 
 
 ## 1. Prepare API Keys
 
-Use the providers' official websites to create or manage the required keys:
-
 - [MinerU](https://mineru.net/)
 - [DeepSeek](https://platform.deepseek.com/)
 - [Alibaba Cloud Model Studio DashScope](https://bailian.console.aliyun.com/)
