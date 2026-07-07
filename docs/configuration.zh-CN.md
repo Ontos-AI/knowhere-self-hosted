@@ -244,14 +244,14 @@ EMBEDDING_MODEL=text-embedding-v4
 | `JOB_WAITING_EXPIRE_SECONDS` | Job 在 pending/waiting-file 状态的最大停留时间，也控制预签名 S3 URL 有效期。 | `7200` |
 | `JOB_PROCESSING_EXPIRE_SECONDS` | Job 在 running/converting 状态的最大停留时间。 | `14400` |
 | `KB_LAYOUT_LLM_COMPACT_INPUT` | 标题层级识别时是否压缩正文行以减少 prompt。 | `true` |
-| `RETRIEVAL_AGENTIC_ENABLED` | 是否启用 agentic retrieval 路由。 | `false` |
-| `RETRIEVAL_AGENTIC_MAX_STEPS` | Agentic retrieval 最大步骤数。 | `10` |
-| `RETRIEVAL_AGENTIC_MAX_DOCS` | Agentic retrieval 最大文档数；`0` 表示不限制。 | `0` |
-| `RETRIEVAL_AGENTIC_MAX_PATH_EXPANSIONS` | Agentic retrieval 最大路径扩展次数。 | `2` |
-| `RETRIEVAL_AGENTIC_MAX_DOC_RETRIES` | Agentic retrieval 单文档最大重试次数。 | `2` |
-| `RETRIEVAL_AGENTIC_LATENCY_BUDGET_MS` | Agentic retrieval 延迟预算，单位毫秒。 | `12000` |
-| `RETRIEVAL_AGENTIC_MIN_EVIDENCE_PATHS` | Agentic retrieval 最少证据路径数。 | `1` |
+| `RETRIEVAL_AGENTIC_LATENCY_BUDGET_MS` | Agentic retrieval 延迟预算，单位毫秒。 | `30000` |
 | `RETRIEVAL_AGENTIC_TRACE_ENABLED` | 是否记录 agentic retrieval trace。 | `true` |
+| `RETRIEVAL_PLANNER_MODEL` | Workflow query planner 使用的推理模型，留空自动选择。 | _（空）_ |
+| `RETRIEVAL_PLANNER_THINKING_BUDGET` | Query planner thinking 调用的 token 预算。 | `4000` |
+| `RETRIEVAL_DECOMPOSITION_MAX_STEPS` | 计划 workflow 最大步骤数。 | `5` |
+| `RETRIEVAL_WALLET_TOTAL_BUDGET` | 分解检索的总 workflow token 预算。 | `200000` |
+| `RETRIEVAL_WALLET_PER_RETRIEVE_STEP_BUDGET` | 每个 retrieve step 默认分配的 token 预算。 | `40000` |
+| `RETRIEVAL_WORKFLOW_PARALLEL_MAX` | 同一 DAG 批次中最大并行 workflow step 数。 | `3` |
 | `LOCAL_DEBUG` | 本地调试开关；部分解析流程会保存中间文件或跳过 Redis 状态写入。 | `0`、`1` |
 | `KNOWHERE_HOME` | 旧版知识图谱和 MCP 自动注册使用的本地根目录。 | `~/.knowhere` |
 | `KNOWHERE_API_KEY` | 自动注册 MCP server 时写入客户端配置的 Knowhere API Key。 | `kh_...` |
