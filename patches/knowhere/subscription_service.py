@@ -107,6 +107,31 @@ async def _resolve_configured_localstack_confirmation_url(
             failure_reason="hostname_resolution_failed",
         )
 
+    # Avoid turning a trusted LocalStack hostname into a generic SSRF primitive if DNS is misconfigured.
+    import ipaddress
+
+    try:
+        ip = ipaddress.ip_address(validated_ip)
+    except ValueError:
+        return HTTPURLValidationResult(
+            is_valid=False,
+            url=url,
+            hostname=hostname,
+            error_message=f"Resolved IP {validated_ip} for hostname {hostname} is invalid",
+            failure_reason="hostname_resolution_failed",
+        )
+
+    if not (ip.is_private or ip.is_loopback or ip.is_link_local):
+        return HTTPURLValidationResult(
+            is_valid=False,
+            url=url,
+            hostname=hostname,
+            error_message=(
+                f"Resolved IP {validated_ip} for hostname {hostname} is not a private/local address"
+            ),
+            failure_reason="disallowed_ip_address",
+        )
+
     return HTTPURLValidationResult(
         is_valid=True,
         url=url,
