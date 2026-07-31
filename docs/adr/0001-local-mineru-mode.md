@@ -4,7 +4,7 @@ Date: 2026-07-22
 
 ## Status
 
-Accepted. Stopgap pending upstream support in the `knowhere` monorepo.
+Accepted. Upstream PR [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233) opened to replace this stopgap with first-class support. Updated with findings from live testing against MinerU 3.4.0 (see pitfalls 9–11).
 
 ## Context
 
@@ -80,8 +80,37 @@ Auto-injected on Docker Desktop and OrbStack, but missing on Linux Docker Engine
 
 `get_existing_mineru_source_s3_key` is called from `rendered_transform.py` before `parse_pdfs` to reuse a previously-rendered PPTX→PDF artifact. With the default `MINERU_UPLOAD_MODE_ENABLED=true`, S3 URL mode is not active, so cache reuse is skipped and PPTX re-renders on each parse. This is **pre-existing** behavior unrelated to the patch. In local mode, setting `MINERU_UPLOAD_MODE_ENABLED=false` enables PPTX cache reuse via LocalStack S3 presigned URLs. The patch does not force this — operators opt in if they care about PPTX rerun cost.
 
+### 9. Form field is `files`, not `file` (MinerU 3.4.0)
+
+Local MinerU's `/file_parse` endpoint expects the PDF under the multipart form field name `files` (an array), not `file`. Sending `file` returns `422 Unprocessable Entity: {"detail":[{"type":"missing","loc":["body","files"],"msg":"Field required","input":null}]}`. The upstream PR uses `files = {"files": (filename, file_obj, "application/pdf")}`.
+
+### 10. Default response is JSON with inline content, not a ZIP (MinerU 3.4.0)
+
+MinerU 3.4.0's `/file_parse` returns `application/json` by default — not a ZIP as ADR 0001 originally assumed. The JSON response contains:
+
+```json
+{
+  "task_id": "...",
+  "status": "completed",
+  "result_url": "http://.../tasks/{id}/result",
+  "results": {
+    "{stem}": {
+      "md_content": "# heading ...",
+      "images": { "hash.jpg": "<base64>", ... }
+    }
+  }
+}
+```
+
+The `result_url` endpoint also returns JSON (same `results` structure), not a ZIP. The upstream PR (as of commit `4eae0385`) writes `md_content` to `full.md` and base64-decodes images to `images/`. A future revision will switch to `response_format_zip=true` to get a real ZIP (see ADR 0002).
+
+### 11. `response_format_zip=true` returns a ZIP with nested layout
+
+When `response_format_zip=true` is set, MinerU 3.4.0 returns `application/zip` with the nested `{stem}/auto/{stem}.md` + `{stem}/auto/images/*` layout that `_flatten_extracted_zip` was originally designed for. Adding `return_original_file=true` also includes `{stem}/auto/{stem}_origin.pdf`. This is the preferred path going forward (see ADR 0002).
+
 ## Future work
 
-- **Upstream contribution.** This patch is a stopgap. A first-class upstream PR to the `knowhere` monorepo would: add `MINERU_LOCAL_MODE`, `MINERU_LOCAL_LANG_LIST`, `MINERU_LOCAL_BACKEND`, `MINERU_LOCAL_TIMEOUT` as typed `pydantic_settings` fields in `shared.core.config.mineru`; refactor `parse_via_full` to dispatch via `settings.MINERU_LOCAL_MODE`; drop the `os.environ.get` reads; and add unit tests for `_flatten_extracted_zip` against representative ZIP fixtures. When a `knowhere` release ≥ X ships this natively, the forked-image approach in this repo should be retired: bump `KNOWHERE_BASE_TAG` to that release, delete `patches/pdf_service.patch`, `Dockerfile.forked`, `scripts/check-patch-drift.sh`, `scripts/edit-patch.sh`, and supersede this ADR.
-- **Async `/tasks` API.** If a deployment regularly parses very large PDFs where the sync `/file_parse` timeout becomes the bottleneck, the patch can be extended to use the local MinerU async API (`/tasks` POST → poll `/tasks/{id}` → fetch `/tasks/{id}/result`). This mirrors the cloud batch pattern and avoids holding open HTTP connections during queue wait. Not pursued in this iteration — the sync endpoint is sufficient for typical use.
+- **Upstream contribution.** Upstream PR [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233) implements first-class `MINERU_LOCAL_MODE` support: typed `pydantic_settings` fields in `shared.core.config.mineru`, `parse_via_full` dispatch, unit tests for `_flatten_extracted_zip`. When a `knowhere` release ships this natively, bump `KNOWHERE_BASE_TAG` to that release and supersede this ADR.
+- **Switch to `response_format_zip=true`.** PR #233 currently handles MinerU 3.4.0's default JSON response (inline `md_content` + base64 images). Switching to `response_format_zip=true` simplifies the code (revert to `_flatten_extracted_zip`, drop base64 decoding) and enables saving the raw ZIP for audit (see ADR 0002).
+- **Async `/tasks` API.** If a deployment regularly parses very large PDFs where the sync `/file_parse` timeout becomes the bottleneck, the patch can be extended to use the local MinerU async API (`/tasks` POST → poll `/tasks/{id}` → fetch `/tasks/{id}/result`). Not pursued — sync endpoint is sufficient for typical use.
 - **`MINERU_LOCAL_BACKEND=vlm-engine` smoke test.** The current smoke fixture only exercises `pipeline`. A GPU-enabled test environment could verify the VLM backends.
