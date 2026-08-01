@@ -4,7 +4,17 @@ Date: 2026-07-31
 
 ## Status
 
-Proposed. Implementation tracked as todos 1/6–6/6. Depends on PR [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233).
+Accepted. Implemented (todos 1/6–6/6 complete) across three upstream PRs:
+
+- [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233) — step 3/6: local MinerU mode archives the raw ZIP (`response_format_zip=true` + `return_original_file=true`), uploads to `results/{job_id}/mineru_raw.zip`, writes the `_mineru_raw_s3_key.txt` sidecar.
+- [Ontos-AI/knowhere#238](https://github.com/Ontos-AI/knowhere/pull/238) — step 4/6: cloud mode archives via `on_zip_downloaded` callback on `download_and_extract_zip`.
+- [Ontos-AI/knowhere#239](https://github.com/Ontos-AI/knowhere/pull/239) — steps 1/6, 2/6, 5/6, 6/6: migration + ORM field, caller wiring stores the sidecar value on `job_results.mineru_raw_s3_key`, and `GET /api/v2/documents/{document_id}/files/mineru-raw` returns presigned URL(s).
+
+Refinements made during implementation (deltas from the plan above):
+
+- **Sharded jobs** archive one raw ZIP per shard with suffixed keys (`results/{job_id}/mineru_raw_shard0.zip`, ...); the worker merges per-shard sidecars into the main output dir sidecar (newline-joined) before the shard workspace is cleaned up.
+- The download endpoint returns a single `url` when one key is stored and a `urls` list for sharded (multi-key) jobs.
+- The cloud-mode sidecar is written after polling completes (not inside the callback), because `download_and_extract_zip`'s extraction cleanup would prune a sidecar written during the callback.
 
 ## Context
 
