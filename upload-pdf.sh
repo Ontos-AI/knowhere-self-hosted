@@ -2,15 +2,15 @@
 set -euo pipefail
 
 # Upload a PDF to Knowhere via the API.
-# Usage: ./upload-pdf.sh <API_KEY> [namespace] [file_path]
+# Usage: ./upload-pdf.sh <API_KEY> [file_path] [namespace]
 #   API_KEY   - Knowhere API key (from dashboard Settings → API Keys)
+#   file_path - path to PDF file (required)
 #   namespace - retrieval namespace (default: "default")
-#   file_path - path to PDF file (default: "og.pdf")
 
 API_BASE="http://localhost:5005/api/v1"
-API_KEY="${1:?Usage: $0 <API_KEY> [namespace] [file_path]}"
-NAMESPACE="${2:-default}"
-FILE="${3:-og.pdf}"
+API_KEY="${1:?Usage: $0 <API_KEY> [file_path] [namespace]}"
+FILE="${2:?Usage: $0 <API_KEY> [file_path] [namespace]}"
+NAMESPACE="${3:-default}"
 
 [ -f "$FILE" ] || { echo "File not found: $FILE"; exit 1; }
 
