@@ -4,7 +4,7 @@ Date: 2026-07-22
 
 ## Status
 
-Accepted. Upstream PR [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233) opened to replace this stopgap with first-class support. Updated with findings from live testing against MinerU 3.4.0 (see pitfalls 9–11).
+Accepted. Upstream PR [Ontos-AI/knowhere#233](https://github.com/Ontos-AI/knowhere/pull/233) opened to replace this stopgap with first-class support. Updated with findings from live testing against MinerU 3.4.0 (see pitfalls 9–12).
 
 ## Context
 
@@ -107,6 +107,15 @@ The `result_url` endpoint also returns JSON (same `results` structure), not a ZI
 ### 11. `response_format_zip=true` returns a ZIP with nested layout
 
 When `response_format_zip=true` is set, MinerU 3.4.0 returns `application/zip` with the nested `{stem}/auto/{stem}.md` + `{stem}/auto/images/*` layout that `_flatten_extracted_zip` was originally designed for. Adding `return_original_file=true` also includes `{stem}/auto/{stem}_origin.pdf`. This is the preferred path going forward (see ADR 0002).
+
+### 12. The office backend cannot parse real-world `.docx` files (MinerU 3.4.0)
+
+Despite advertising DOCX/PPTX/XLSX support, submitting a `.docx` to `/file_parse` (any backend) routes to `mineru.backend.office` which produced an empty markdown in testing: only a page-number header survived (`- 2 -`), and the 682 KB funding-application form yielded zero paragraphs and zero tables. Two contributing causes were observed:
+
+- **EMF vector images.** The docx embeds `/word/media/*.emf` (form checkbox/border graphics). MinerU's office image loader logs `Skipping EMF image part before Pillow load` and drops them — PIL cannot decode EMF/WMF.
+- **Empty model output even without EMFs.** Stripping the EMF parts still produced `middle.json` with empty `para_blocks` and a 0-byte markdown, so the docx converter itself is not yet functional in this build.
+
+**Recommendation: convert Office files to PDF before uploading to Knowhere.** The PDF pipeline (pipeline/vlm backends) is mature and reliable; the office path is not. Users should use LibreOffice/Word/Acrobat to produce the PDF client-side. Documented in the README ("Input Format Recommendation").
 
 ## Future work
 
