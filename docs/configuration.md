@@ -244,14 +244,7 @@ EMBEDDING_MODEL=text-embedding-v4
 | `JOB_WAITING_EXPIRE_SECONDS` | Maximum time for jobs in pending/waiting-file states. Also controls presigned S3 URL expiry. | `7200` |
 | `JOB_PROCESSING_EXPIRE_SECONDS` | Maximum time for jobs in running/converting states. | `14400` |
 | `KB_LAYOUT_LLM_COMPACT_INPUT` | Whether to compact body lines during heading hierarchy recognition to reduce prompt size. | `true` |
-| `RETRIEVAL_AGENTIC_LATENCY_BUDGET_MS` | Agentic retrieval latency budget, in milliseconds. | `30000` |
-| `RETRIEVAL_AGENTIC_TRACE_ENABLED` | Whether to record agentic retrieval traces. | `true` |
-| `RETRIEVAL_PLANNER_MODEL` | Reasoning-capable model for the workflow query planner. Empty = auto-select. | _(empty)_ |
-| `RETRIEVAL_PLANNER_THINKING_BUDGET` | Token budget for the query planner thinking call. | `4000` |
-| `RETRIEVAL_DECOMPOSITION_MAX_STEPS` | Maximum number of planned workflow steps. | `5` |
-| `RETRIEVAL_WALLET_TOTAL_BUDGET` | Total workflow token wallet for decomposed retrieval. | `200000` |
-| `RETRIEVAL_WALLET_PER_RETRIEVE_STEP_BUDGET` | Default token budget issued to each retrieve step. | `40000` |
-| `RETRIEVAL_WORKFLOW_PARALLEL_MAX` | Maximum concurrent workflow steps in the same DAG batch. | `3` |
+| `RETRIEVAL_POSTGRES_FTS_CANDIDATE_LIMIT` | Classic BM25 Postgres FTS candidate cap. Map-nav is the default retrieval path (omit/`use_agentic=true`); `use_agentic=false` selects classic. | `2000` |
 | `LOCAL_DEBUG` | Local debug switch. Some parsing flows save intermediate files or skip Redis status writes. | `0`, `1` |
 | `KNOWHERE_HOME` | Local root directory used by legacy knowledge graph and MCP auto-registration flows. | `~/.knowhere` |
 | `KNOWHERE_API_KEY` | Knowhere API key written to client config during MCP server auto-registration. | `kh_...` |
