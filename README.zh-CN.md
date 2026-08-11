@@ -98,6 +98,27 @@ http://localhost:5005/health
 - Node.js SDK：[Ontos-AI/knowhere-node-sdk](https://github.com/Ontos-AI/knowhere-node-sdk)
 - Python SDK：[Ontos-AI/knowhere-python-sdk](https://github.com/Ontos-AI/knowhere-python-sdk)
 
+### 输入格式建议
+
+**上传前请先将 Office 文件转换为 PDF。** Knowhere 使用 MinerU 解析 PDF，能够输出最完整、结构化的结果
+（完整 markdown、表格单元格结构、页脚及脚注）。Word 文档（`.docx`）走的是另一套较简单的解析流程，其局限包括：
+
+- 表格被拍平为纯文本，丢失了「行到列」的数值对应关系；
+- 丢弃页脚及页脚注释说明；
+- 不产出 `full.md` 产物。
+
+当前版本的 MinerU office 后端对真实 `.docx` 文件并不可靠。对政府资助申请表格的实测发现：将 `.docx`
+直接提交给 MinerU 返回的是空 markdown（仅保留了页码页眉），而使用第三方转换工具生成的 PDF 偶尔也会丢失
+「净新增经常性开支」等关键数字。原始 `.docx` 从不丢失数字，但缺少表格结构，难以判断数值属于哪一列。
+
+**进行准确的成本/节省分析时，推荐流程：**
+
+1. 上传前先用办公套件（如 LibreOffice、Microsoft Word 或 Adobe Acrobat）将源 `.docx` 转换为 PDF；
+2. 将 **PDF** 上传到 Knowhere；
+3. 保留原始 `.docx` 作为第二参考——如果某个数字可疑，请对照源文档核对；合计行不要只依赖单次转换的输出。
+
+这样既能获得 MinerU 完整的结构化输出，又能保留原始文件的准确性。
+
 ## 常用命令
 
 查看服务状态：
