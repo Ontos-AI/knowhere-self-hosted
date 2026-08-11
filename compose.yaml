@@ -20,6 +20,7 @@ services:
       - knowhere_user_data:/data/users
       - knowhere_model_cache:/data/models
       - knowhere_secrets:/data/secrets
+      - ./patches/knowhere/subscription_service.py:/opt/knowhere/source/api/apps/api/app/services/s3_events/subscription_service.py:ro
 
   postgres:
     image: postgres:15-alpine
