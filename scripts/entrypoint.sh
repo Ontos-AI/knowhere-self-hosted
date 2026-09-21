@@ -301,6 +301,9 @@ setDefault SELF_HOSTED_STORAGE_CORS_ALLOWED_ORIGINS ""
 
 setDefault DS_URL https://api.deepseek.com/v1
 setDefault DS_KEY ""
+setDefault CURSOR_API_KEY ""
+setDefault AGENT_EXPLORE_HARNESS cursor_sdk
+setDefault AGENT_EXPLORE_CURSOR_MODEL composer-2.5
 setDefault NORMOL_MODEL deepseek-v4-flash
 setDefault HIERARCHY_LLM_MODEL "${NORMOL_MODEL}"
 setDefault IMAGE_MODEL qwen3.6-flash

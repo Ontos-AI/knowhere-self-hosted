@@ -2,7 +2,7 @@
 
 English | [中文](configuration.zh-CN.md)
 
-This document covers optional configuration beyond the minimal startup path. A normal local deployment only needs `MINERU_API_KEYS` and either `DS_KEY` or `ALI_API_KEYS`, as shown in the README.
+This document covers optional configuration beyond the minimal startup path. A normal local deployment only needs `MINERU_API_KEYS` and either `DS_KEY` or `ALI_API_KEYS`, as shown in the README. `CURSOR_API_KEY` is only required when agent retrieval is on and the mode is Cursor.
 
 Docker Compose reads `.env.defaults` first, then reads `.env`. `.env.defaults` is the built-in default reference. For real deployments, create a small `.env` file that only contains values you need to override, and never commit real secrets to Git.
 
@@ -52,6 +52,7 @@ Get keys from the providers' official websites:
 | `DS_URL` | DeepSeek OpenAI-compatible base URL. | `https://api.deepseek.com/v1` |
 | `ALI_URL` | DashScope OpenAI-compatible base URL. | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
 | `GPT_API_KEY` | OpenAI or other compatible service key. The default URL routing still depends on model names; confirm provider support in the image before using it. | `sk-...` |
+| `CURSOR_API_KEY` | Cursor API key. Needed only when agent retrieval is on and `AGENT_EXPLORE_HARNESS=cursor_sdk`. | `key_...` |
 | `GLM_API_KEY` | Zhipu GLM API key. | `...` |
 | `GLM_URL` | Zhipu GLM base URL. | `https://open.bigmodel.cn/api/paas/v4` |
 | `ARK_API_KEY` | Volcengine Ark API key. | `...` |
@@ -244,7 +245,9 @@ EMBEDDING_MODEL=text-embedding-v4
 | `JOB_WAITING_EXPIRE_SECONDS` | Maximum time for jobs in pending/waiting-file states. Also controls presigned S3 URL expiry. | `7200` |
 | `JOB_PROCESSING_EXPIRE_SECONDS` | Maximum time for jobs in running/converting states. | `14400` |
 | `KB_LAYOUT_LLM_COMPACT_INPUT` | Whether to compact body lines during heading hierarchy recognition to reduce prompt size. | `true` |
-| `RETRIEVAL_POSTGRES_FTS_CANDIDATE_LIMIT` | Classic BM25 Postgres FTS candidate cap. Map-nav is the default retrieval path (omit/`use_agentic=true`); `use_agentic=false` selects classic. | `2000` |
+| `AGENT_EXPLORE_HARNESS` | Agent mode when `use_agentic` is on (omit or `true`). `cursor_sdk` is Cursor. `openai` is Knowhere's own harness and uses `DS_KEY` / `ALI_API_KEYS`. Ignored when `use_agentic=false`. Unrecognized values fall back to `cursor_sdk`. | `cursor_sdk`, `openai` |
+| `AGENT_EXPLORE_CURSOR_MODEL` | Model for Cursor agent mode. Ignored by Knowhere's own harness and when agent retrieval is off. Per-request `agent_explore_model` on the API overrides this. | `composer-2.5` |
+| `RETRIEVAL_POSTGRES_FTS_CANDIDATE_LIMIT` | Classic BM25 Postgres FTS candidate cap. Used when `use_agentic=false`. | `2000` |
 | `LOCAL_DEBUG` | Local debug switch. Some parsing flows save intermediate files or skip Redis status writes. | `0`, `1` |
 | `KNOWHERE_HOME` | Local root directory used by legacy knowledge graph and MCP auto-registration flows. | `~/.knowhere` |
 | `KNOWHERE_API_KEY` | Knowhere API key written to client config during MCP server auto-registration. | `kh_...` |

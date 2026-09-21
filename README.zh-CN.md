@@ -17,6 +17,7 @@ Knowhere Self-Hosted 用于 Knowhere 的自托管部署。如果你想使用或�
 - [MinerU](https://mineru.net/)
 - [DeepSeek](https://platform.deepseek.com/)
 - [阿里云百炼 DashScope](https://bailian.console.aliyun.com/)
+- [Cursor](https://cursor.com/docs/api)（只用 Cursor 做 agent 检索时才需要）
 
 ## 2. 配置 `.env`
 
@@ -38,6 +39,17 @@ NORMOL_MODEL=qwen-plus
 HIERARCHY_LLM_MODEL=qwen-plus
 IMAGE_MODEL=qwen3.6-flash
 IMAGE_MODEL_MAX=qwen3.6-flash
+```
+
+请求里的 `use_agentic` 只决定开不开 agent 检索。关掉（`false`）走 classic，不需要额外 key。打开（省略或 `true`）时，用 `AGENT_EXPLORE_HARNESS` 选模式：
+
+```bash
+# Cursor
+AGENT_EXPLORE_HARNESS=cursor_sdk
+CURSOR_API_KEY=your-cursor-api-key
+
+# 自研（用 DS_KEY / ALI_API_KEYS）
+AGENT_EXPLORE_HARNESS=openai
 ```
 
 `MINERU_API_KEYS` 和 `ALI_API_KEYS` 都支持多个 Key，用英文逗号分隔。多个 Key 不是必需的；它们会组成一个 Key 池，当某个 Key 触发限流时，Knowhere 可以轮换使用其他 Key。

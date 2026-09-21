@@ -17,6 +17,7 @@ For now, our setup uses MinerU as the default PDF parser. If you customize the p
 - [MinerU](https://mineru.net/)
 - [DeepSeek](https://platform.deepseek.com/)
 - [Alibaba Cloud Model Studio DashScope](https://bailian.console.aliyun.com/)
+- [Cursor](https://cursor.com/docs/api) only if you use Cursor agent retrieval
 
 ## 2. Configure `.env`
 
@@ -38,6 +39,17 @@ NORMOL_MODEL=qwen-plus
 HIERARCHY_LLM_MODEL=qwen-plus
 IMAGE_MODEL=qwen3.6-flash
 IMAGE_MODEL_MAX=qwen3.6-flash
+```
+
+`use_agentic` on the request turns agent retrieval on or off. When it is off (`false`), retrieval is classic map-unit BM25 and needs no extra key. When it is on (omit or `true`), pick one agent mode with `AGENT_EXPLORE_HARNESS`:
+
+```bash
+# Cursor agent mode
+AGENT_EXPLORE_HARNESS=cursor_sdk
+CURSOR_API_KEY=your-cursor-api-key
+
+# Knowhere's own agent mode (uses DS_KEY / ALI_API_KEYS)
+AGENT_EXPLORE_HARNESS=openai
 ```
 
 `MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys separated by commas. Multiple keys are optional; they form a key pool so Knowhere can rotate requests across keys when one key reaches provider quota or rate limits.
