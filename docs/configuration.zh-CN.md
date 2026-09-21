@@ -2,7 +2,7 @@
 
 [English](configuration.md) | 中文
 
-本文档记录启动服务以外的可选配置。普通本地部署只需要 README 中的 `MINERU_API_KEYS` 和 `DS_KEY` 或 `ALI_API_KEYS`。
+本文档记录启动服务以外的可选配置。普通本地部署只需要 README 中的 `MINERU_API_KEYS` 和 `DS_KEY` 或 `ALI_API_KEYS`。只有打开 agent 检索且模式为 Cursor 时，才需要 `CURSOR_API_KEY`。
 
 Docker Compose 会先读取 `.env.defaults`，再读取 `.env`。`.env.defaults` 是内置默认值参考；实际部署时请新建一个小的 `.env`，只写需要覆盖的值，不要把真实密钥提交到 Git。
 
@@ -52,6 +52,7 @@ Key 请从各服务商官网获取：
 | `DS_URL` | DeepSeek OpenAI-compatible base URL。 | `https://api.deepseek.com/v1` |
 | `ALI_URL` | DashScope OpenAI-compatible base URL。 | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
 | `GPT_API_KEY` | OpenAI 或其他兼容服务的 Key。当前默认 URL 路由仍以模型名判断，使用前请确认镜像支持对应 provider。 | `sk-...` |
+| `CURSOR_API_KEY` | Cursor API Key。仅在打开 agent 检索且 `AGENT_EXPLORE_HARNESS=cursor_sdk` 时需要。 | `key_...` |
 | `GLM_API_KEY` | 智谱 GLM API Key。 | `...` |
 | `GLM_URL` | 智谱 GLM base URL。 | `https://open.bigmodel.cn/api/paas/v4` |
 | `ARK_API_KEY` | 火山方舟 API Key。 | `...` |
@@ -244,7 +245,9 @@ EMBEDDING_MODEL=text-embedding-v4
 | `JOB_WAITING_EXPIRE_SECONDS` | Job 在 pending/waiting-file 状态的最大停留时间，也控制预签名 S3 URL 有效期。 | `7200` |
 | `JOB_PROCESSING_EXPIRE_SECONDS` | Job 在 running/converting 状态的最大停留时间。 | `14400` |
 | `KB_LAYOUT_LLM_COMPACT_INPUT` | 标题层级识别时是否压缩正文行以减少 prompt。 | `true` |
-| `RETRIEVAL_POSTGRES_FTS_CANDIDATE_LIMIT` | classic BM25 的 Postgres FTS 预筛候选上限。 map-nav 为默认检索路径（请求省略/`use_agentic=true`）；`use_agentic=false` 走 classic。 | `2000` |
+| `AGENT_EXPLORE_HARNESS` | `use_agentic` 打开时的 agent 模式。`cursor_sdk` 是 Cursor；`openai` 是自研，用 `DS_KEY` / `ALI_API_KEYS`。`use_agentic=false` 时忽略。无法识别的值回退到 `cursor_sdk`。 | `cursor_sdk`、`openai` |
+| `AGENT_EXPLORE_CURSOR_MODEL` | Cursor 模式下的模型。自研模式和关掉 agent 时忽略。API 请求里的 `agent_explore_model` 会覆盖它。 | `composer-2.5` |
+| `RETRIEVAL_POSTGRES_FTS_CANDIDATE_LIMIT` | classic BM25 的 Postgres FTS 预筛候选上限。仅 `use_agentic=false` 时使用。 | `2000` |
 | `LOCAL_DEBUG` | 本地调试开关；部分解析流程会保存中间文件或跳过 Redis 状态写入。 | `0`、`1` |
 | `KNOWHERE_HOME` | 旧版知识图谱和 MCP 自动注册使用的本地根目录。 | `~/.knowhere` |
 | `KNOWHERE_API_KEY` | 自动注册 MCP server 时写入客户端配置的 Knowhere API Key。 | `kh_...` |
