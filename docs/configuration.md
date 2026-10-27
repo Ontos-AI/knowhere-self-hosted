@@ -2,7 +2,7 @@
 
 English | [中文](configuration.zh-CN.md)
 
-This document covers optional configuration beyond the minimal startup path. A normal local deployment only needs `MINERU_API_KEYS` and either `DS_KEY` or `ALI_API_KEYS`, as shown in the README. `CURSOR_API_KEY` is only required when agent retrieval is on and the mode is Cursor.
+This document covers optional configuration beyond the minimal startup path. A normal local deployment needs `MINERU_API_KEYS`, `VERCEL_KEY`, and either `DS_KEY` or `ALI_API_KEYS`, as shown in the README. `CURSOR_API_KEY` is only required when agent retrieval is on and the mode is Cursor.
 
 Docker Compose reads `.env.defaults` first, then reads `.env`. `.env.defaults` is the built-in default reference. For real deployments, create a small `.env` file that only contains values you need to override, and never commit real secrets to Git.
 
@@ -36,6 +36,7 @@ KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:l
 | `MINERU_API_KEYS` | MinerU API key pool for PDF parsing. Supports JSON arrays, comma-separated values, newline-separated values, and `token_id=api_key` entries. | `mineru-key-1,mineru-key-2` |
 | `DS_KEY` | DeepSeek API key. Set this when using DeepSeek as the text model provider. | `sk-...` |
 | `ALI_API_KEYS` | Alibaba Cloud Model Studio DashScope API key pool. Set this when using Qwen models. The format is the same as `MINERU_API_KEYS`. | `sk-...` |
+| `VERCEL_KEY` | Vercel AI Gateway key for page-image and query embeddings. | `vck_...` |
 
 `MINERU_API_KEYS` and `ALI_API_KEYS` support multiple keys so they can form a key pool. When one key reaches provider quota or rate limits, Knowhere can rotate to another key. A single key also works.
 
@@ -57,11 +58,12 @@ Get keys from the providers' official websites:
 | `GLM_URL` | Zhipu GLM base URL. | `https://open.bigmodel.cn/api/paas/v4` |
 | `ARK_API_KEY` | Volcengine Ark API key. | `...` |
 | `ARK_URL` | Volcengine Ark chat completions URL. | `https://ark.cn-beijing.volces.com/api/v3/chat/completions` |
-| `NORMOL_MODEL` | Main model for text, table understanding, and summarization. | `deepseek-v4-flash`, `qwen-plus` |
-| `HIERARCHY_LLM_MODEL` | Model for document heading hierarchy and table-of-contents recognition. Falls back to `NORMOL_MODEL` when empty. | `deepseek-v4-flash`, `qwen-plus` |
-| `IMAGE_MODEL` | Default vision model for image summaries, image collections, and OCR-related work. | `qwen3.6-flash` |
-| `IMAGE_MODEL_MAX` | Higher-capability model for image Q&A and OCR. | `qwen3.6-flash` |
-| `EMBEDDING_MODEL` | Embedding model used for retrieval. | `text-embedding-v4` |
+| `VERCEL_KEY` | Vercel AI Gateway key for page-image and query embeddings. | `vck_...` |
+| `NORMOL_MODEL` | Main model for text, table understanding, and summarization. | `deepseek-flash`, `qwen-plus` |
+| `HIERARCHY_LLM_MODEL` | Model for document heading hierarchy and table-of-contents recognition. Falls back to `NORMOL_MODEL` when empty. | `deepseek-flash`, `qwen-plus` |
+| `IMAGE_MODEL` | Default vision model for image summaries, image collections, and OCR-related work. | `deepseek-flash` |
+| `EMBEDDING_MODEL` | Page-image and query embedding model. Uses `VERCEL_KEY`. | `google/gemini-embedding-2` |
+| `EMBEDDING_DIM` | Embedding vector dimension. Must match the embedding model. | `3072` |
 | `OPENAI_CLIENT_TIMEOUT` | OpenAI-compatible client timeout, in seconds. | `300` |
 | `LLM_MOCK_ENABLED` | Whether to short-circuit LLM calls with mock responses, mainly for tests. | `false` |
 | `HEADING_LLM_MAX_CONCURRENT` | Maximum concurrent LLM calls for heading recognition. | `8` |
@@ -76,19 +78,20 @@ DeepSeek example:
 
 ```bash
 DS_KEY=your-deepseek-api-key
-NORMOL_MODEL=deepseek-v4-flash
-HIERARCHY_LLM_MODEL=deepseek-v4-flash
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 Alibaba Cloud Model Studio DashScope example:
 
 ```bash
 ALI_API_KEYS=your-dashscope-api-key
-NORMOL_MODEL=qwen-plus
-HIERARCHY_LLM_MODEL=qwen-plus
-IMAGE_MODEL=qwen3.6-flash
-IMAGE_MODEL_MAX=qwen3.6-flash
-EMBEDDING_MODEL=text-embedding-v4
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 ## MinerU and Optional Parsing Services
@@ -227,7 +230,7 @@ EMBEDDING_MODEL=text-embedding-v4
 
 | Variable | Usage | Example values |
 | --- | --- | --- |
-| `SUPPORTED_EXTENSIONS` | Allowed upload file extensions, comma-separated. | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.md` |
+| `SUPPORTED_EXTENSIONS` | Allowed upload file extensions, comma-separated. | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm` |
 | `MAX_FILE_SIZE` | Maximum file size, in bytes. | `104857600` |
 | `MAX_IMAGE_SIZE` | Maximum image size, in bytes. | `10485760` |
 | `PDF_PROFILE_TOC_ENABLED` | Enable PDF table-of-contents extraction during document profiling. | `false` |
@@ -237,7 +240,7 @@ EMBEDDING_MODEL=text-embedding-v4
 | `CHROMEDRIVER_PATH` | ChromeDriver path. | `/usr/bin/chromedriver` |
 | `MIN_CONFIDENCE_THRESHOLD` | Parsing confidence threshold. | `0.05` |
 | `HIGH_IOU_THRESHOLD` | High IoU threshold. | `0.9` |
-| `DEFAULT_EMBEDDING_DIM` | Default embedding dimension. | `1024` |
+| `PAGE_MEMORY_EMBED_CONCURRENCY` | Concurrent page-image embedding calls during progressive M0. | `10` |
 | `DEFAULT_TOP_K` | Default retrieval top-k. | `5` |
 | `DEFAULT_BATCH_SIZE` | Default batch size. | `32` |
 | `DEFAULT_EPOCHS` | Default training epoch count. | `3` |

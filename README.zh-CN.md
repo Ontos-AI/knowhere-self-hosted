@@ -17,6 +17,7 @@ Knowhere Self-Hosted 用于 Knowhere 的自托管部署。如果你想使用或�
 - [MinerU](https://mineru.net/)
 - [DeepSeek](https://platform.deepseek.com/)
 - [阿里云百炼 DashScope](https://bailian.console.aliyun.com/)
+- 页图 embedding 需要的 Vercel AI Gateway Key
 - [Cursor](https://cursor.com/docs/api)（只用 Cursor 做 agent 检索时才需要）
 
 ## 2. 配置 `.env`
@@ -28,6 +29,7 @@ Knowhere Self-Hosted 用于 Knowhere 的自托管部署。如果你想使用或�
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 DS_KEY=your-deepseek-api-key
+VERCEL_KEY=your-vercel-ai-gateway-key
 ```
 
 使用阿里云百炼 DashScope：
@@ -35,10 +37,10 @@ DS_KEY=your-deepseek-api-key
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 ALI_API_KEYS=your-dashscope-api-key
-NORMOL_MODEL=qwen-plus
-HIERARCHY_LLM_MODEL=qwen-plus
-IMAGE_MODEL=qwen3.6-flash
-IMAGE_MODEL_MAX=qwen3.6-flash
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 请求里的 `use_agentic` 只决定开不开 agent 检索。关掉（`false`）走 classic，不需要额外 key。打开（省略或 `true`）时，用 `AGENT_EXPLORE_HARNESS` 选模式：

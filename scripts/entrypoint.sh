@@ -304,11 +304,13 @@ setDefault DS_KEY ""
 setDefault CURSOR_API_KEY ""
 setDefault AGENT_EXPLORE_HARNESS cursor_sdk
 setDefault AGENT_EXPLORE_CURSOR_MODEL composer-2.5
-setDefault NORMOL_MODEL deepseek-v4-flash
+setDefault NORMOL_MODEL deepseek-flash
 setDefault HIERARCHY_LLM_MODEL "${NORMOL_MODEL}"
-setDefault IMAGE_MODEL qwen3.6-flash
-setDefault IMAGE_MODEL_MAX "${IMAGE_MODEL}"
-setDefault EMBEDDING_MODEL text-embedding-v4
+setDefault IMAGE_MODEL deepseek-flash
+setDefault VERCEL_KEY ""
+setDefault EMBEDDING_MODEL google/gemini-embedding-2
+setDefault EMBEDDING_DIM 3072
+setDefault PAGE_MEMORY_EMBED_CONCURRENCY 10
 setDefault PDF_PROFILE_TOC_ENABLED false
 setDefault GLM_URL https://open.bigmodel.cn/api/paas/v4
 setDefault ALI_URL https://dashscope.aliyuncs.com/compatible-mode/v1

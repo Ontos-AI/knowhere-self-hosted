@@ -17,6 +17,7 @@ For now, our setup uses MinerU as the default PDF parser. If you customize the p
 - [MinerU](https://mineru.net/)
 - [DeepSeek](https://platform.deepseek.com/)
 - [Alibaba Cloud Model Studio DashScope](https://bailian.console.aliyun.com/)
+- A Vercel AI Gateway key for page-image embeddings
 - [Cursor](https://cursor.com/docs/api) only if you use Cursor agent retrieval
 
 ## 2. Configure `.env`
@@ -28,6 +29,7 @@ For DeepSeek:
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 DS_KEY=your-deepseek-api-key
+VERCEL_KEY=your-vercel-ai-gateway-key
 ```
 
 For Alibaba Cloud Model Studio DashScope:
@@ -35,10 +37,10 @@ For Alibaba Cloud Model Studio DashScope:
 ```bash
 MINERU_API_KEYS=your-mineru-api-key
 ALI_API_KEYS=your-dashscope-api-key
-NORMOL_MODEL=qwen-plus
-HIERARCHY_LLM_MODEL=qwen-plus
-IMAGE_MODEL=qwen3.6-flash
-IMAGE_MODEL_MAX=qwen3.6-flash
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 `use_agentic` on the request turns agent retrieval on or off. When it is off (`false`), retrieval is classic map-unit BM25 and needs no extra key. When it is on (omit or `true`), pick one agent mode with `AGENT_EXPLORE_HARNESS`:
