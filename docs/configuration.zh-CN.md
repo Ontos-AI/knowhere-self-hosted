@@ -2,7 +2,7 @@
 
 [English](configuration.md) | 中文
 
-本文档记录启动服务以外的可选配置。普通本地部署只需要 README 中的 `MINERU_API_KEYS` 和 `DS_KEY` 或 `ALI_API_KEYS`。只有打开 agent 检索且模式为 Cursor 时，才需要 `CURSOR_API_KEY`。
+本文档记录启动服务以外的可选配置。普通本地部署需要 README 中的 `MINERU_API_KEYS`、`VERCEL_KEY`，以及 `DS_KEY` 或 `ALI_API_KEYS`。只有打开 agent 检索且模式为 Cursor 时，才需要 `CURSOR_API_KEY`。
 
 Docker Compose 会先读取 `.env.defaults`，再读取 `.env`。`.env.defaults` 是内置默认值参考；实际部署时请新建一个小的 `.env`，只写需要覆盖的值，不要把真实密钥提交到 Git。
 
@@ -36,6 +36,7 @@ KNOWHERE_IMAGE=knowhere-registry.cn-shenzhen.cr.aliyuncs.com/knowhere/knowhere:l
 | `MINERU_API_KEYS` | MinerU API Key 池，用于 PDF 解析。支持 JSON 数组、逗号分隔或换行分隔，条目也可写成 `token_id=api_key`。 | `mineru-key-1,mineru-key-2` |
 | `DS_KEY` | DeepSeek API Key。使用 DeepSeek 作为文本模型时填写。 | `sk-...` |
 | `ALI_API_KEYS` | 阿里云百炼 DashScope API Key 池。使用 Qwen 模型时填写，格式同 `MINERU_API_KEYS`。 | `sk-...` |
+| `VERCEL_KEY` | 页图和查询 embedding 使用的 Vercel AI Gateway Key。 | `vck_...` |
 
 `MINERU_API_KEYS` 和 `ALI_API_KEYS` 支持多个 Key 是为了组成 Key 池，在单个 Key 触发额度或限流时可以轮换使用其他 Key。只有一个 Key 也可以正常运行。
 
@@ -57,11 +58,12 @@ Key 请从各服务商官网获取：
 | `GLM_URL` | 智谱 GLM base URL。 | `https://open.bigmodel.cn/api/paas/v4` |
 | `ARK_API_KEY` | 火山方舟 API Key。 | `...` |
 | `ARK_URL` | 火山方舟 chat completions URL。 | `https://ark.cn-beijing.volces.com/api/v3/chat/completions` |
-| `NORMOL_MODEL` | 主要文本、表格理解和摘要模型。 | `deepseek-v4-flash`、`qwen-plus` |
-| `HIERARCHY_LLM_MODEL` | 文档标题层级、目录识别模型；为空时回退到 `NORMOL_MODEL`。 | `deepseek-v4-flash`、`qwen-plus` |
-| `IMAGE_MODEL` | 图片摘要、图集和 OCR 相关的默认视觉模型。 | `qwen3.6-flash` |
-| `IMAGE_MODEL_MAX` | 更高能力的图片问答和 OCR 模型。 | `qwen3.6-flash` |
-| `EMBEDDING_MODEL` | 检索使用的 embedding 模型名。 | `text-embedding-v4` |
+| `VERCEL_KEY` | 页图和查询 embedding 使用的 Vercel AI Gateway Key。 | `vck_...` |
+| `NORMOL_MODEL` | 主要文本、表格理解和摘要模型。 | `deepseek-flash`、`qwen-plus` |
+| `HIERARCHY_LLM_MODEL` | 文档标题层级、目录识别模型；为空时回退到 `NORMOL_MODEL`。 | `deepseek-flash`、`qwen-plus` |
+| `IMAGE_MODEL` | 图片摘要、图集和 OCR 相关的默认视觉模型。 | `deepseek-flash` |
+| `EMBEDDING_MODEL` | 页图和查询 embedding 模型。走 `VERCEL_KEY`。 | `google/gemini-embedding-2` |
+| `EMBEDDING_DIM` | embedding 向量维度，必须和 embedding 模型一致。 | `3072` |
 | `OPENAI_CLIENT_TIMEOUT` | OpenAI-compatible 客户端超时时间，单位秒。 | `300` |
 | `LLM_MOCK_ENABLED` | 是否用 mock 响应短路 LLM 调用，主要用于测试。 | `false` |
 | `HEADING_LLM_MAX_CONCURRENT` | 标题识别并发 LLM 调用上限。 | `8` |
@@ -76,19 +78,20 @@ DeepSeek 示例：
 
 ```bash
 DS_KEY=your-deepseek-api-key
-NORMOL_MODEL=deepseek-v4-flash
-HIERARCHY_LLM_MODEL=deepseek-v4-flash
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 阿里云百炼示例：
 
 ```bash
 ALI_API_KEYS=your-dashscope-api-key
-NORMOL_MODEL=qwen-plus
-HIERARCHY_LLM_MODEL=qwen-plus
-IMAGE_MODEL=qwen3.6-flash
-IMAGE_MODEL_MAX=qwen3.6-flash
-EMBEDDING_MODEL=text-embedding-v4
+VERCEL_KEY=your-vercel-ai-gateway-key
+NORMOL_MODEL=deepseek-flash
+HIERARCHY_LLM_MODEL=deepseek-flash
+IMAGE_MODEL=deepseek-flash
 ```
 
 ## MinerU 和可选解析服务
@@ -227,7 +230,7 @@ EMBEDDING_MODEL=text-embedding-v4
 
 | 变量 | 用途 | 示例值 |
 | --- | --- | --- |
-| `SUPPORTED_EXTENSIONS` | 允许上传的文件扩展名，逗号分隔。 | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.md` |
+| `SUPPORTED_EXTENSIONS` | 允许上传的文件扩展名，逗号分隔。 | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm` |
 | `MAX_FILE_SIZE` | 最大文件大小，单位字节。 | `104857600` |
 | `MAX_IMAGE_SIZE` | 最大图片大小，单位字节。 | `10485760` |
 | `PDF_PROFILE_TOC_ENABLED` | 是否在文档画像阶段启用 PDF 目录抽取。 | `false` |
@@ -237,7 +240,7 @@ EMBEDDING_MODEL=text-embedding-v4
 | `CHROMEDRIVER_PATH` | ChromeDriver 路径。 | `/usr/bin/chromedriver` |
 | `MIN_CONFIDENCE_THRESHOLD` | 解析置信度阈值。 | `0.05` |
 | `HIGH_IOU_THRESHOLD` | 高 IoU 阈值。 | `0.9` |
-| `DEFAULT_EMBEDDING_DIM` | 默认 embedding 维度。 | `1024` |
+| `PAGE_MEMORY_EMBED_CONCURRENCY` | 渐进式 M0 生成页图向量时的并发数。 | `10` |
 | `DEFAULT_TOP_K` | 默认检索 top-k。 | `5` |
 | `DEFAULT_BATCH_SIZE` | 默认批大小。 | `32` |
 | `DEFAULT_EPOCHS` | 默认训练 epoch 数。 | `3` |
