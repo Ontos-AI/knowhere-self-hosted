@@ -92,6 +92,7 @@ RUN apt-get update \
     bash \
     ca-certificates \
     curl \
+    ffmpeg \
     fonts-dejavu-core \
     libgl1 \
     libglib2.0-0 \

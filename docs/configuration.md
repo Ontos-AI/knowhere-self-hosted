@@ -62,6 +62,7 @@ Get keys from the providers' official websites:
 | `NORMOL_MODEL` | Main model for text, table understanding, and summarization. | `deepseek-flash`, `qwen-plus` |
 | `HIERARCHY_LLM_MODEL` | Model for document heading hierarchy and table-of-contents recognition. Falls back to `NORMOL_MODEL` when empty. | `deepseek-flash`, `qwen-plus` |
 | `IMAGE_MODEL` | Default vision model for image summaries, image collections, and OCR-related work. | `deepseek-flash` |
+| `SPEECH_MODEL` | DashScope Fun-ASR model for audio/video transcription. Requires `ALI_API_KEYS` and `ffmpeg` in the worker image. | `fun-asr` |
 | `EMBEDDING_MODEL` | Page-image and query embedding model. Uses `VERCEL_KEY`. | `google/gemini-embedding-2` |
 | `EMBEDDING_DIM` | Embedding vector dimension. Must match the embedding model. | `3072` |
 | `OPENAI_CLIENT_TIMEOUT` | OpenAI-compatible client timeout, in seconds. | `300` |
@@ -230,8 +231,11 @@ IMAGE_MODEL=deepseek-flash
 
 | Variable | Usage | Example values |
 | --- | --- | --- |
-| `SUPPORTED_EXTENSIONS` | Allowed upload file extensions, comma-separated. | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm` |
+| `SUPPORTED_EXTENSIONS` | Allowed upload file extensions, comma-separated. | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.tsv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm,.mp3,.wav,.m4a,.aac,.flac,.ogg,.opus,.mp4,.mov,.webm,.mkv` |
 | `MAX_FILE_SIZE` | Maximum file size, in bytes. | `104857600` |
+| `MAX_MEDIA_FILE_SIZE` | Maximum audio/video file size, in bytes. Defaults to the same cap as `MAX_FILE_SIZE`. | `104857600` |
+| `MEDIA_MAX_DURATION_FREE_SECONDS` | Maximum audio/video duration per file for free and guest users, in seconds. Longer files are rejected before billing. | `3600` |
+| `MEDIA_MAX_DURATION_PAID_SECONDS` | Maximum audio/video duration per file for paid users, in seconds. | `7200` |
 | `MAX_IMAGE_SIZE` | Maximum image size, in bytes. | `10485760` |
 | `PDF_PROFILE_TOC_ENABLED` | Enable PDF table-of-contents extraction during document profiling. | `false` |
 | `USERS_DATA_PATH` | Shared user data directory for API and Worker. Must be an absolute path. | `/data/users` |

@@ -62,6 +62,7 @@ Key 请从各服务商官网获取：
 | `NORMOL_MODEL` | 主要文本、表格理解和摘要模型。 | `deepseek-flash`、`qwen-plus` |
 | `HIERARCHY_LLM_MODEL` | 文档标题层级、目录识别模型；为空时回退到 `NORMOL_MODEL`。 | `deepseek-flash`、`qwen-plus` |
 | `IMAGE_MODEL` | 图片摘要、图集和 OCR 相关的默认视觉模型。 | `deepseek-flash` |
+| `SPEECH_MODEL` | 音视频转写使用的 DashScope Fun-ASR 模型。需要 `ALI_API_KEYS`，Worker 镜像需包含 `ffmpeg`。 | `fun-asr` |
 | `EMBEDDING_MODEL` | 页图和查询 embedding 模型。走 `VERCEL_KEY`。 | `google/gemini-embedding-2` |
 | `EMBEDDING_DIM` | embedding 向量维度，必须和 embedding 模型一致。 | `3072` |
 | `OPENAI_CLIENT_TIMEOUT` | OpenAI-compatible 客户端超时时间，单位秒。 | `300` |
@@ -230,8 +231,11 @@ IMAGE_MODEL=deepseek-flash
 
 | 变量 | 用途 | 示例值 |
 | --- | --- | --- |
-| `SUPPORTED_EXTENSIONS` | 允许上传的文件扩展名，逗号分隔。 | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm` |
+| `SUPPORTED_EXTENSIONS` | 允许上传的文件扩展名，逗号分隔。 | `.doc,.docx,.pdf,.txt,.xls,.xlsx,.csv,.tsv,.pptx,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.heic,.heif,.md,.html,.htm,.mp3,.wav,.m4a,.aac,.flac,.ogg,.opus,.mp4,.mov,.webm,.mkv` |
 | `MAX_FILE_SIZE` | 最大文件大小，单位字节。 | `104857600` |
+| `MAX_MEDIA_FILE_SIZE` | 音视频最大文件大小，单位字节。默认与 `MAX_FILE_SIZE` 相同。 | `104857600` |
+| `MEDIA_MAX_DURATION_FREE_SECONDS` | 免费用户和访客单个音视频文件的最长时长，单位秒。超出会在计费前被拒绝。 | `3600` |
+| `MEDIA_MAX_DURATION_PAID_SECONDS` | 付费用户单个音视频文件的最长时长，单位秒。 | `7200` |
 | `MAX_IMAGE_SIZE` | 最大图片大小，单位字节。 | `10485760` |
 | `PDF_PROFILE_TOC_ENABLED` | 是否在文档画像阶段启用 PDF 目录抽取。 | `false` |
 | `USERS_DATA_PATH` | API 和 Worker 共享用户数据目录，必须是绝对路径。 | `/data/users` |
