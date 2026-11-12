@@ -307,6 +307,7 @@ setDefault AGENT_EXPLORE_CURSOR_MODEL composer-2.5
 setDefault NORMOL_MODEL deepseek-flash
 setDefault HIERARCHY_LLM_MODEL "${NORMOL_MODEL}"
 setDefault IMAGE_MODEL deepseek-flash
+setDefault SPEECH_MODEL fun-asr
 setDefault VERCEL_KEY ""
 setDefault EMBEDDING_MODEL google/gemini-embedding-2
 setDefault EMBEDDING_DIM 3072
